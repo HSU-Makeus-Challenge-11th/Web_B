@@ -80,6 +80,7 @@
 - ✅ [이름] 파트-주차
 
   ex) [Suhhee] FE-01
+  
   ex) [Suhhee] BE-03
 
 <br>
