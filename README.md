@@ -46,31 +46,11 @@ Suhhee/
 
 [Issue 생성 화면](https://github.com/HSU-Makeus-Challenge-11th/Web_B/issues/new/choose)에서 작업 파트와 작업 유형에 맞는 템플릿을 선택합니다.
 
-#### Frontend
-
-- `[Frontend] Feature`
-- `[Frontend] Fix`
-- `[Frontend] Refactor`
-- `[Frontend] Chore`
-- `[Frontend] Docs`
-- `[Frontend] CI/CD`
-
-#### Backend
-
-- `[Backend] Feature`
-- `[Backend] Fix`
-- `[Backend] Refactor`
-- `[Backend] Chore`
-- `[Backend] Docs`
-- `[Backend] CI/CD`
-
 Issue 제목의 `주차` 부분을 실제 주차 번호로 변경합니다.
 
 ```text
-✨ Feat: [FE-01] 로그인 화면 구현
-🐛 Fix: [FE-02] 버튼 클릭 오류 수정
-✨ Feat: [BE-01] 회원가입 API 구현
-🐛 Fix: [BE-02] 로그인 요청 오류 수정
+✨ Feat: [FE-01] 본인 이름
+🐛 Fix: [BE-02] 본인 이름
 ```
 
 ### 2. Branch 생성
