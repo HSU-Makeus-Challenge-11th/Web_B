@@ -45,3 +45,8 @@ out/
 
 #env
 .env
+
+### Node.js / TypeScript ###
+node_modules/
+dist/
+*.tsbuildinfo
