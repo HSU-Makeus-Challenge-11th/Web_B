@@ -1,0 +1,358 @@
+.app {
+  min-height: 100vh;
+  color: #17191e;
+  background: #f6f7f9;
+}
+
+/* Header */
+
+.site-header {
+  position: relative;
+  z-index: 10;
+  height: 91px;
+  background: #ffffff;
+  border-bottom: 1px solid #e3e6eb;
+}
+
+.header-inner {
+  width: 100%;
+  max-width: 1440px;
+  height: 100%;
+  margin: 0 auto;
+  padding: 24px 80px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.brand-row {
+  display: flex;
+  align-items: center;
+  gap: 42px;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #17191e;
+  text-decoration: none;
+}
+
+.brand-mark {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid #17191e;
+  border-radius: 8px;
+}
+
+.brand-mark img {
+  width: 24px;
+  height: 24px;
+}
+
+.brand-name {
+  font-size: 20px;
+  font-weight: 900;
+  line-height: normal;
+  letter-spacing: -0.7px;
+}
+
+.main-navigation {
+  display: flex;
+  align-items: center;
+  gap: 30px;
+}
+
+.navigation-link {
+  color: #606774;
+  font-size: 14px;
+  font-weight: 700;
+  line-height: normal;
+  text-decoration: none;
+}
+
+.navigation-link.active {
+  color: #17191e;
+  text-decoration: underline;
+  text-underline-position: from-font;
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.search-button {
+  width: 42px;
+  height: 42px;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #ffffff;
+  border: 1px solid #e3e6eb;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.search-button img {
+  width: 24px;
+  height: 24px;
+  opacity: 0.62;
+}
+
+.login-button {
+  width: 71px;
+  height: 42px;
+  padding: 0 16px;
+  color: #ffffff;
+  font-size: 14px;
+  font-weight: 800;
+  line-height: normal;
+  background: #2563eb;
+  border: 1px solid #ffffff;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+/* Main */
+
+.main-content {
+  width: 100%;
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 24px 80px 90px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.page-title {
+  margin: 0;
+  color: #17191e;
+  font-size: 38px;
+  font-weight: 700;
+  line-height: 44px;
+  letter-spacing: -1.71px;
+}
+
+/* Movie grid */
+
+.movie-grid {
+  width: 100%;
+  min-height: 1017px;
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  grid-auto-rows: 318px;
+  column-gap: 18px;
+  row-gap: 20px;
+  align-content: start;
+}
+
+.movie-card {
+  min-width: 0;
+  height: 318px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.poster-wrapper {
+  position: relative;
+  width: 100%;
+  height: 274px;
+  flex-shrink: 0;
+  overflow: hidden;
+  background: #f6f7f9;
+  border-radius: 10px;
+}
+
+.movie-poster {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+  object-position: center;
+}
+
+.bookmark-button {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 34px;
+  height: 34px;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #17191e;
+  border: 1px solid #ffffff;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.bookmark-button.active {
+  background: #2563eb;
+  border-color: #2563eb;
+}
+
+.bookmark-button img {
+  width: 24px;
+  height: 24px;
+  filter: invert(1);
+}
+
+.movie-title {
+  width: 100%;
+  height: 22px;
+  overflow: hidden;
+  margin: 0;
+  padding-top: 5px;
+  color: #17191e;
+  font-size: 14px;
+  font-weight: 800;
+  line-height: 17px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.movie-release-date {
+  width: 100%;
+  height: 14px;
+  margin: 0;
+  color: #969da8;
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 14px;
+}
+
+.empty-message {
+  min-height: 1017px;
+  margin: 0;
+  padding-top: 100px;
+  color: #606774;
+  text-align: center;
+}
+
+/* Pagination */
+
+.pagination {
+  width: 100%;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+}
+
+.pagination-arrow {
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+}
+
+.pagination-arrow img {
+  width: 24px;
+  height: 24px;
+  display: block;
+  opacity: 0.65;
+}
+
+.page-buttons {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.page-button {
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  color: #606774;
+  font-size: 13px;
+  font-weight: 700;
+  background: transparent;
+  border: 0;
+  border-radius: 7px;
+  cursor: pointer;
+}
+
+.page-button.active {
+  color: #ffffff;
+  background: #17191e;
+}
+
+/* Footer */
+
+.site-footer {
+  position: fixed;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 20;
+  height: 57px;
+  background: #ffffff;
+  border-top: 1px solid #e3e6eb;
+}
+
+.footer-inner {
+  width: 100%;
+  max-width: 1440px;
+  height: 100%;
+  margin: 0 auto;
+  padding: 16px 80px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.tmdb-logo {
+  width: 24px;
+  height: 24px;
+}
+
+.footer-inner p {
+  margin: 0;
+  color: #606774;
+  font-size: 12px;
+  font-weight: 400;
+  line-height: normal;
+  white-space: nowrap;
+}
+
+.footer-inner a {
+  color: inherit;
+}
+
+/* Interaction */
+
+.search-button:hover,
+.pagination-arrow:hover,
+.page-button:not(.active):hover {
+  background: #eef0f3;
+}
+
+.login-button:hover,
+.bookmark-button.active:hover {
+  background: #1d4ed8;
+}
+
+.brand:focus-visible,
+.navigation-link:focus-visible,
+.search-button:focus-visible,
+.login-button:focus-visible,
+.bookmark-button:focus-visible,
+.pagination-arrow:focus-visible,
+.page-button:focus-visible {
+  outline: 3px solid rgba(37, 99, 235, 0.35);
+  outline-offset: 2px;
+}
