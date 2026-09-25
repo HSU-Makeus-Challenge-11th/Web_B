@@ -1,0 +1,133 @@
+.header {
+  width: 1440px;
+  height: 91px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 24px 80px;
+  box-sizing: border-box;
+  background-color: #FFFFFF;
+  border-bottom: 1px solid #E3E6EB;
+}
+
+.brand-row {
+  width: 308px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  gap: 42px;
+}
+
+.brand {
+  width: 116px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.brand img {
+  width: 24px;
+  height: 24px;
+}
+
+.header-title {
+  margin: 0;
+  width: 74px;
+  height: 24px;
+  font-family: "Pretendard";
+  font-weight: 900;
+  font-size: 20px; 
+  line-height: 100%;
+  letter-spacing: -0.7px;
+  color: #17191E;
+}
+
+.header-nav {
+  width: 150px;
+  height: 17px;
+  display: flex;
+  gap: 30px;
+}
+
+.text-movie {
+  width: 25px;
+  height: 17px;
+  font-family: "Pretendard";
+  font-weight: 700;
+  font-size: 14px;
+  line-height: 100%;
+  letter-spacing: 0;
+  text-align: center;
+  color: #17191E;
+}
+
+.text-search {
+  width: 25px;
+  height: 17px;
+  font-family: "Pretendard";
+  font-weight: 700;
+  font-size: 14px;
+  line-height: 100%;
+  letter-spacing: 0;
+  text-align: center;
+  color: #606774;
+}
+
+.text-info {
+  width: 40px;
+  height: 17px;
+  font-family: "Pretendard";
+  font-weight: 700;
+  font-size: 14px;
+  line-height: 100%;
+  letter-spacing: 0;
+  text-align: center;
+  color: #606774;
+}
+
+.top-actions {
+  display: flex;
+  width: 123px;
+  height: 42px;
+  gap: 10px;
+}
+
+.search {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 42px;
+  height: 42px;
+  padding: 1px 6px;
+  border-radius: 8px;
+  background-color: #FFFFFF;
+  border: 1px solid #ddd;
+}
+
+.search img {
+  width: 24px;
+  height: 24px;
+}
+
+.login {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 71px;
+  height: 42px;
+  padding: 0 16px;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  background-color: #2563EB;
+}
+
+.login p{
+  margin: 0;
+  width: 37px;
+  height: 17px;
+  font-family: "Pretendard";
+  font-weight: 700;
+  font-size: 14px;
+  color: #fff;
+}
