@@ -110,9 +110,11 @@ export function SearchPage() {
               <h2 className="m-0 text-[17px] font-bold">
                 ‘{query.trim()}’ 검색 결과
               </h2>
-              <p className="m-0 text-xs text-[#8b95a5]">
-                영화 {movies.length}편
-              </p>
+              {!isLoading && !errorMessage && (
+                <p className="m-0 text-xs text-[#8b95a5]">
+                  영화 {movies.length}편
+                </p>
+              )}
             </div>
 
             {isLoading ? (
