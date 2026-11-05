@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="ko"><head><meta charset="utf-8"><title>삭제 결과 확인</title>
+<style>
+* { box-sizing: border-box; }
+body { margin: 0; background: #eef1f5; color: #1f2937; font-family: "Malgun Gothic", sans-serif; }
+main { margin: 32px; background: white; border: 1px solid #d8dee7; border-radius: 12px; padding: 28px 32px; }
+.eyebrow { color: #64748b; font-size: 17px; margin-bottom: 10px; }
+h1 { font-size: 30px; margin: 0 0 14px; }
+.url { padding: 16px; background: #f5f7fa; border: 1px solid #e2e8f0; border-radius: 7px; font-family: Consolas, monospace; font-size: 20px; overflow-wrap: anywhere; }
+.method { color: #245cb6; font-weight: 700; margin-right: 14px; }
+.columns { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-top: 24px; }
+h2 { font-size: 19px; margin: 0 0 14px; }
+pre { font: 18px/1.65 Consolas, "Malgun Gothic", monospace; white-space: pre-wrap; overflow-wrap: anywhere; margin: 0; min-height: 330px; padding: 22px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 7px; }
+.status { display: inline-block; padding: 5px 10px; border-radius: 5px; margin-left: 10px; font: bold 17px Consolas, monospace; }
+.success { background: #dcfce7; color: #166534; } .failure { background: #ffedd5; color: #9a3412; }
+.meta { font-size: 15px; color: #64748b; line-height: 1.8; margin-top: 20px; }
+.notice { margin-top: 14px; padding: 12px 16px; border-left: 3px solid #94a3b8; background: #f8fafc; font-size: 15px; line-height: 1.7; }
+</style></head><body><main>
+<div class="eyebrow">6주차 Spring Boot 실습 · 실제 HTTP 요청 / 응답 기록</div>
+<h1>삭제 결과 확인</h1>
+<div class="url"><span class="method">GET</span>http://127.0.0.1:18080/members/1/ratings</div>
+<div class="columns"><section><h2>Request Body</h2><pre>(요청 본문 없음)</pre></section>
+<section><h2>Response <span class="status success">200 </span></h2><pre>[]</pre></section></div>
+<div class="meta">실행 환경: Spring Boot 3.5.0 · Java 21 · H2 (test profile)<br>
+실행 시각: 2026-11-06T01:24:32+09:00 · Response Content-Type: application/json</div>
+<div class="notice">로컬 Spring 서버에서 받은 응답을 저장해 표시한 화면입니다. Postman 화면이 아니며, 원본 상태·헤더·본문은 responses.json에 함께 보관했습니다.</div>
+</main></body></html>
