@@ -1,4 +1,7 @@
 spring:
+  jackson:
+    deserialization:
+      accept-float-as-int: false
   datasource:
     url: jdbc:mysql://localhost:3307/umc_movie
     username: root

@@ -38,3 +38,8 @@ out/
 
 ### Local run configurations ###
 .run/
+
+### Submitted API capture records ###
+!docs/evidence/
+!docs/evidence/week6/
+!docs/evidence/week6/**

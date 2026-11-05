@@ -1,0 +1,121 @@
+# IntelliJ HTTP Client에서 실행할 수 있는 Spring Boot 실습 요청입니다.
+# 실제 MySQL 서버를 실행하고, 가입 응답의 memberId와 등록 응답의 ratingId로 아래 변수를 바꾸세요.
+# 다시 가입할 때는 email과 nickname을 바꾸세요. 그대로 재요청하면 중복 409입니다.
+@baseUrl = http://localhost:8080
+@memberId = 1
+@otherMemberId = 2
+@ratingId = 1
+
+### 1. 회원가입 — 201, password 미포함
+POST {{baseUrl}}/members
+Content-Type: application/json
+
+{
+  "email": "umc@example.com",
+  "password": "Umc!1234",
+  "nickname": "moviefan"
+}
+
+### 2. 검증 실패 — 400
+POST {{baseUrl}}/members
+Content-Type: application/json
+
+{
+  "email": "not-email",
+  "password": "Umc!1234",
+  "nickname": "moviefan"
+}
+
+### 3. 이메일 중복 — 409 (1번 가입 후 실행)
+POST {{baseUrl}}/members
+Content-Type: application/json
+
+{
+  "email": "umc@example.com",
+  "password": "Umc!1234",
+  "nickname": "anotherfan"
+}
+
+### 4. 다른 회원 가입 — 응답 ID를 otherMemberId에 입력
+POST {{baseUrl}}/members
+Content-Type: application/json
+
+{
+  "email": "other@example.com",
+  "password": "Umc!1234",
+  "nickname": "otherfan"
+}
+
+### 5. 평점 등록 — 201 (응답 result를 ratingId에 입력)
+POST {{baseUrl}}/members/{{memberId}}/ratings
+Content-Type: application/json
+
+{
+  "movieId": 550,
+  "score": 5,
+  "comment": "다시 보고 싶은 영화"
+}
+
+### 6. 중복 평점 — 409 (5번 등록 후 실행)
+POST {{baseUrl}}/members/{{memberId}}/ratings
+Content-Type: application/json
+
+{
+  "movieId": 550,
+  "score": 4
+}
+
+### 7. 잘못된 점수 — 400
+POST {{baseUrl}}/members/{{memberId}}/ratings
+Content-Type: application/json
+
+{
+  "movieId": 155,
+  "score": 6
+}
+
+### 8. 소수 점수 — 400
+POST {{baseUrl}}/members/{{memberId}}/ratings
+Content-Type: application/json
+
+{
+  "movieId": 155,
+  "score": 4.5
+}
+
+### 9. 평점 수정 — 200
+PATCH {{baseUrl}}/members/{{memberId}}/ratings/{{ratingId}}
+Content-Type: application/json
+
+{
+  "score": 4,
+  "comment": "수정한 후기"
+}
+
+### 10. 다른 회원의 수정 — 403
+PATCH {{baseUrl}}/members/{{otherMemberId}}/ratings/{{ratingId}}
+Content-Type: application/json
+
+{
+  "score": 1
+}
+
+### 11. 다른 회원의 삭제 — 403
+DELETE {{baseUrl}}/members/{{otherMemberId}}/ratings/{{ratingId}}
+
+### 12. 없는 평점 수정 — 404 (해당 ID가 DB에 없는지 확인)
+PATCH {{baseUrl}}/members/{{memberId}}/ratings/9223372036854775807
+Content-Type: application/json
+
+{
+  "score": 3
+}
+
+### 13. 평점 조회 — 200, 기존 배열 응답 유지
+GET {{baseUrl}}/members/{{memberId}}/ratings
+
+### 14. 평점 삭제 — 204, 응답 본문 없음
+DELETE {{baseUrl}}/members/{{memberId}}/ratings/{{ratingId}}
+
+### 15. 삭제한 평점 재삭제 — 404
+DELETE {{baseUrl}}/members/{{memberId}}/ratings/{{ratingId}}
