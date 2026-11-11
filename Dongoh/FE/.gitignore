@@ -1,0 +1,4 @@
+# Local migration backup (includes private environment files).
+.local-backups/
+.tanstack/
+*.code-workspace
