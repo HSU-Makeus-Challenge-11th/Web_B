@@ -1090,5 +1090,5 @@ pnpm dev
 ## 제출 기록
 
 - Issue: [#88](https://github.com/HSU-Makeus-Challenge-11th/Web_B/issues/88)
-- PR: 미기록
-- 커밋: 미기록
+- PR: [#89](https://github.com/HSU-Makeus-Challenge-11th/Web_B/pull/89) — main 대상 검토 중
+- 커밋: 구현 커밋 [6cdb0d1](https://github.com/HSU-Makeus-Challenge-11th/Web_B/commit/6cdb0d12b48f67f0b138c0c939840554ca6862ae)
