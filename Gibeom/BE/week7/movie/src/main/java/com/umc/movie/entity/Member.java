@@ -39,4 +39,8 @@ public class Member extends BaseTimeEntity {
         this.password = password;
         this.nickname = nickname;
     }
+    // src/main/java/com/umc/movie/entity/Member.java 에 아래 메서드를 추가합니다
+    public void updateNickname(String nickname) {
+        this.nickname = nickname;
+    }
 }
