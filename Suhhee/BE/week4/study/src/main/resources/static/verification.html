@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>4주차 ORM API 검증</title>
+    <style>
+      :root {
+        color: #172033;
+        background: #f3f6fb;
+        font-family: Pretendard, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      }
+      * { box-sizing: border-box; }
+      body { margin: 0; padding: 36px; }
+      main { max-width: 1180px; margin: 0 auto; }
+      header { display: flex; align-items: end; justify-content: space-between; gap: 24px; margin-bottom: 24px; }
+      h1 { margin: 0; font-size: 34px; }
+      header p { margin: 8px 0 0; color: #5b6578; }
+      button { border: 0; border-radius: 10px; padding: 12px 18px; background: #172033; color: white; font-weight: 700; cursor: pointer; }
+      .grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; }
+      article { min-height: 250px; border: 1px solid #dce2ec; border-radius: 16px; background: white; padding: 20px; box-shadow: 0 10px 30px rgba(34, 50, 84, .08); }
+      .meta { display: flex; justify-content: space-between; gap: 12px; align-items: center; }
+      h2 { margin: 0; font-size: 18px; }
+      .status { border-radius: 999px; padding: 5px 10px; background: #e8f8ef; color: #147a45; font-size: 12px; font-weight: 800; }
+      .status.error { background: #fff0f0; color: #c03636; }
+      code { color: #3f4a5e; }
+      pre { min-height: 142px; overflow: auto; margin: 14px 0 0; padding: 15px; border-radius: 10px; background: #111827; color: #d6e2ff; font: 12px/1.55 ui-monospace, SFMono-Regular, Menlo, monospace; white-space: pre-wrap; }
+      @media (max-width: 800px) { body { padding: 20px; } .grid { grid-template-columns: 1fr; } header { align-items: start; flex-direction: column; } }
+    </style>
+  </head>
+  <body>
+    <main>
+      <header>
+        <div>
+          <h1>4주차 ORM 도서 API 검증</h1>
+          <p>Spring Data JPA · DTO Validation · 예외 응답</p>
+        </div>
+        <button id="run" type="button">전체 요청 다시 실행</button>
+      </header>
+      <section class="grid" id="results" aria-live="polite"></section>
+    </main>
+    <script>
+      const requests = [
+        { title: "도서 목록", method: "GET", url: "/books" },
+        { title: "도서 등록", method: "POST", url: "/books", body: { categoryId: 1, title: "ORM으로 배우는 도서 API", description: "JPA Repository로 저장함" } },
+        { title: "빈 제목 검증", method: "POST", url: "/books", body: { categoryId: 1, title: "", description: "제목 누락" } },
+        { title: "없는 카테고리", method: "POST", url: "/books", body: { categoryId: 999, title: "존재하지 않는 카테고리", description: "404 검증" } },
+      ];
+
+      async function callApi(request) {
+        const response = await fetch(request.url, {
+          method: request.method,
+          headers: request.body ? { "Content-Type": "application/json" } : undefined,
+          body: request.body ? JSON.stringify(request.body) : undefined,
+        });
+        const text = await response.text();
+        let body = text;
+        try { body = JSON.parse(text); } catch { /* keep plain text */ }
+        return { ...request, status: response.status, statusText: response.statusText, response: body };
+      }
+
+      async function run() {
+        const results = document.querySelector("#results");
+        results.innerHTML = "<article><h2>요청 실행 중...</h2></article>";
+        const responses = [];
+        for (const request of requests) responses.push(await callApi(request));
+        results.innerHTML = responses.map((item) => {
+          const ok = item.status >= 200 && item.status < 300;
+          const requestBody = item.body ? `\n요청 ${JSON.stringify(item.body, null, 2)}\n` : "";
+          return `<article>
+            <div class="meta"><h2>${item.title}</h2><span class="status ${ok ? "" : "error"}">${item.status} ${item.statusText}</span></div>
+            <p><code>${item.method} ${item.url}</code></p>
+            <pre>${requestBody}\n응답 ${JSON.stringify(item.response, null, 2)}</pre>
+          </article>`;
+        }).join("");
+      }
+
+      document.querySelector("#run").addEventListener("click", run);
+      run();
+    </script>
+  </body>
+</html>

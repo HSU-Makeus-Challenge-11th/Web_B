@@ -1,0 +1,398 @@
+{
+  "environment": "Spring Boot / H2, test profile",
+  "records": [
+    {
+      "key": "01-signup",
+      "title": "회원가입 성공",
+      "capturedAt": "2026-11-06T01:24:32+09:00",
+      "method": "POST",
+      "url": "http://127.0.0.1:18080/members",
+      "request": {
+        "email": "umc@example.com",
+        "password": "Umc!1234",
+        "nickname": "moviefan"
+      },
+      "status": 201,
+      "reason": "",
+      "headers": {
+        "Vary": "Origin",
+        "Content-Type": "application/json",
+        "Transfer-Encoding": "chunked",
+        "Date": "Thu, 05 Nov 2026 16:24:32 GMT",
+        "Connection": "close"
+      },
+      "rawBody": "{\"isSuccess\":true,\"code\":\"COMMON201\",\"message\":\"회원가입에 성공했습니다.\",\"result\":{\"memberId\":1,\"email\":\"umc@example.com\",\"nickname\":\"moviefan\"}}",
+      "response": {
+        "isSuccess": true,
+        "code": "COMMON201",
+        "message": "회원가입에 성공했습니다.",
+        "result": {
+          "memberId": 1,
+          "email": "umc@example.com",
+          "nickname": "moviefan"
+        }
+      }
+    },
+    {
+      "key": "02-validation",
+      "title": "이메일 검증 실패",
+      "capturedAt": "2026-11-06T01:24:32+09:00",
+      "method": "POST",
+      "url": "http://127.0.0.1:18080/members",
+      "request": {
+        "email": "not-email",
+        "password": "Umc!1234",
+        "nickname": "moviefan"
+      },
+      "status": 400,
+      "reason": "",
+      "headers": {
+        "Vary": "Origin",
+        "Content-Type": "application/json",
+        "Transfer-Encoding": "chunked",
+        "Date": "Thu, 05 Nov 2026 16:24:32 GMT",
+        "Connection": "close"
+      },
+      "rawBody": "{\"isSuccess\":false,\"code\":\"COMMON4001\",\"message\":\"올바른 이메일 형식이 아닙니다.\",\"result\":null}",
+      "response": {
+        "isSuccess": false,
+        "code": "COMMON4001",
+        "message": "올바른 이메일 형식이 아닙니다.",
+        "result": null
+      }
+    },
+    {
+      "key": "07-email-conflict",
+      "title": "중복 이메일",
+      "capturedAt": "2026-11-06T01:24:32+09:00",
+      "method": "POST",
+      "url": "http://127.0.0.1:18080/members",
+      "request": {
+        "email": "umc@example.com",
+        "password": "Umc!1234",
+        "nickname": "anotherfan"
+      },
+      "status": 409,
+      "reason": "",
+      "headers": {
+        "Vary": "Origin",
+        "Content-Type": "application/json",
+        "Transfer-Encoding": "chunked",
+        "Date": "Thu, 05 Nov 2026 16:24:32 GMT",
+        "Connection": "close"
+      },
+      "rawBody": "{\"isSuccess\":false,\"code\":\"COMMON409\",\"message\":\"이미 사용 중인 이메일입니다.\",\"result\":null}",
+      "response": {
+        "isSuccess": false,
+        "code": "COMMON409",
+        "message": "이미 사용 중인 이메일입니다.",
+        "result": null
+      }
+    },
+    {
+      "key": "setup-other",
+      "title": "다른 회원 준비",
+      "capturedAt": "2026-11-06T01:24:32+09:00",
+      "method": "POST",
+      "url": "http://127.0.0.1:18080/members",
+      "request": {
+        "email": "other@example.com",
+        "password": "Umc!1234",
+        "nickname": "otherfan"
+      },
+      "status": 201,
+      "reason": "",
+      "headers": {
+        "Vary": "Origin",
+        "Content-Type": "application/json",
+        "Transfer-Encoding": "chunked",
+        "Date": "Thu, 05 Nov 2026 16:24:32 GMT",
+        "Connection": "close"
+      },
+      "rawBody": "{\"isSuccess\":true,\"code\":\"COMMON201\",\"message\":\"회원가입에 성공했습니다.\",\"result\":{\"memberId\":2,\"email\":\"other@example.com\",\"nickname\":\"otherfan\"}}",
+      "response": {
+        "isSuccess": true,
+        "code": "COMMON201",
+        "message": "회원가입에 성공했습니다.",
+        "result": {
+          "memberId": 2,
+          "email": "other@example.com",
+          "nickname": "otherfan"
+        }
+      }
+    },
+    {
+      "key": "03-rating-create",
+      "title": "평점 등록 성공",
+      "capturedAt": "2026-11-06T01:24:32+09:00",
+      "method": "POST",
+      "url": "http://127.0.0.1:18080/members/1/ratings",
+      "request": {
+        "movieId": 550,
+        "score": 5,
+        "comment": "다시 보고 싶은 영화"
+      },
+      "status": 201,
+      "reason": "",
+      "headers": {
+        "Vary": "Origin",
+        "Content-Type": "application/json",
+        "Transfer-Encoding": "chunked",
+        "Date": "Thu, 05 Nov 2026 16:24:32 GMT",
+        "Connection": "close"
+      },
+      "rawBody": "{\"isSuccess\":true,\"code\":\"COMMON201\",\"message\":\"평점 등록에 성공했습니다.\",\"result\":1}",
+      "response": {
+        "isSuccess": true,
+        "code": "COMMON201",
+        "message": "평점 등록에 성공했습니다.",
+        "result": 1
+      }
+    },
+    {
+      "key": "08-score-validation",
+      "title": "별점 범위 검증",
+      "capturedAt": "2026-11-06T01:24:32+09:00",
+      "method": "POST",
+      "url": "http://127.0.0.1:18080/members/1/ratings",
+      "request": {
+        "movieId": 155,
+        "score": 6
+      },
+      "status": 400,
+      "reason": "",
+      "headers": {
+        "Vary": "Origin",
+        "Content-Type": "application/json",
+        "Transfer-Encoding": "chunked",
+        "Date": "Thu, 05 Nov 2026 16:24:32 GMT",
+        "Connection": "close"
+      },
+      "rawBody": "{\"isSuccess\":false,\"code\":\"COMMON4001\",\"message\":\"별점은 5점 이하여야 합니다.\",\"result\":null}",
+      "response": {
+        "isSuccess": false,
+        "code": "COMMON4001",
+        "message": "별점은 5점 이하여야 합니다.",
+        "result": null
+      }
+    },
+    {
+      "key": "09-rating-conflict",
+      "title": "중복 평점",
+      "capturedAt": "2026-11-06T01:24:32+09:00",
+      "method": "POST",
+      "url": "http://127.0.0.1:18080/members/1/ratings",
+      "request": {
+        "movieId": 550,
+        "score": 4
+      },
+      "status": 409,
+      "reason": "",
+      "headers": {
+        "Vary": "Origin",
+        "Content-Type": "application/json",
+        "Transfer-Encoding": "chunked",
+        "Date": "Thu, 05 Nov 2026 16:24:32 GMT",
+        "Connection": "close"
+      },
+      "rawBody": "{\"isSuccess\":false,\"code\":\"COMMON409\",\"message\":\"이미 이 영화에 평점을 남기셨습니다.\",\"result\":null}",
+      "response": {
+        "isSuccess": false,
+        "code": "COMMON409",
+        "message": "이미 이 영화에 평점을 남기셨습니다.",
+        "result": null
+      }
+    },
+    {
+      "key": "04-rating-update",
+      "title": "평점 수정 성공",
+      "capturedAt": "2026-11-06T01:24:32+09:00",
+      "method": "PATCH",
+      "url": "http://127.0.0.1:18080/members/1/ratings/1",
+      "request": {
+        "score": 4,
+        "comment": "수정한 후기"
+      },
+      "status": 200,
+      "reason": "",
+      "headers": {
+        "Vary": "Origin",
+        "Content-Type": "application/json",
+        "Transfer-Encoding": "chunked",
+        "Date": "Thu, 05 Nov 2026 16:24:32 GMT",
+        "Connection": "close"
+      },
+      "rawBody": "{\"isSuccess\":true,\"code\":\"COMMON200\",\"message\":\"평점 수정에 성공했습니다.\",\"result\":null}",
+      "response": {
+        "isSuccess": true,
+        "code": "COMMON200",
+        "message": "평점 수정에 성공했습니다.",
+        "result": null
+      }
+    },
+    {
+      "key": "10-forbidden-update",
+      "title": "다른 회원의 수정 차단",
+      "capturedAt": "2026-11-06T01:24:32+09:00",
+      "method": "PATCH",
+      "url": "http://127.0.0.1:18080/members/2/ratings/1",
+      "request": {
+        "score": 1
+      },
+      "status": 403,
+      "reason": "",
+      "headers": {
+        "Vary": "Origin",
+        "Content-Type": "application/json",
+        "Transfer-Encoding": "chunked",
+        "Date": "Thu, 05 Nov 2026 16:24:32 GMT",
+        "Connection": "close"
+      },
+      "rawBody": "{\"isSuccess\":false,\"code\":\"COMMON403\",\"message\":\"본인이 작성한 평점만 수정하거나 삭제할 수 있습니다.\",\"result\":null}",
+      "response": {
+        "isSuccess": false,
+        "code": "COMMON403",
+        "message": "본인이 작성한 평점만 수정하거나 삭제할 수 있습니다.",
+        "result": null
+      }
+    },
+    {
+      "key": "11-forbidden-delete",
+      "title": "다른 회원의 삭제 차단",
+      "capturedAt": "2026-11-06T01:24:32+09:00",
+      "method": "DELETE",
+      "url": "http://127.0.0.1:18080/members/2/ratings/1",
+      "request": null,
+      "status": 403,
+      "reason": "",
+      "headers": {
+        "Vary": "Origin",
+        "Content-Type": "application/json",
+        "Transfer-Encoding": "chunked",
+        "Date": "Thu, 05 Nov 2026 16:24:32 GMT",
+        "Connection": "close"
+      },
+      "rawBody": "{\"isSuccess\":false,\"code\":\"COMMON403\",\"message\":\"본인이 작성한 평점만 수정하거나 삭제할 수 있습니다.\",\"result\":null}",
+      "response": {
+        "isSuccess": false,
+        "code": "COMMON403",
+        "message": "본인이 작성한 평점만 수정하거나 삭제할 수 있습니다.",
+        "result": null
+      }
+    },
+    {
+      "key": "12-read-after-update",
+      "title": "수정 결과 확인",
+      "capturedAt": "2026-11-06T01:24:32+09:00",
+      "method": "GET",
+      "url": "http://127.0.0.1:18080/members/1/ratings",
+      "request": null,
+      "status": 200,
+      "reason": "",
+      "headers": {
+        "Vary": "Origin",
+        "Content-Type": "application/json",
+        "Transfer-Encoding": "chunked",
+        "Date": "Thu, 05 Nov 2026 16:24:33 GMT",
+        "Connection": "close"
+      },
+      "rawBody": "[{\"ratingId\":1,\"movieId\":550,\"score\":4,\"comment\":\"수정한 후기\",\"createdAt\":\"2026-11-06T01:24:32.820571\",\"updatedAt\":\"2026-11-06T01:24:32.855754\"}]",
+      "response": [
+        {
+          "ratingId": 1,
+          "movieId": 550,
+          "score": 4,
+          "comment": "수정한 후기",
+          "createdAt": "2026-11-06T01:24:32.820571",
+          "updatedAt": "2026-11-06T01:24:32.855754"
+        }
+      ]
+    },
+    {
+      "key": "13-not-found",
+      "title": "없는 평점 수정",
+      "capturedAt": "2026-11-06T01:24:32+09:00",
+      "method": "PATCH",
+      "url": "http://127.0.0.1:18080/members/1/ratings/9223372036854775807",
+      "request": {
+        "score": 3
+      },
+      "status": 404,
+      "reason": "",
+      "headers": {
+        "Vary": "Origin",
+        "Content-Type": "application/json",
+        "Transfer-Encoding": "chunked",
+        "Date": "Thu, 05 Nov 2026 16:24:33 GMT",
+        "Connection": "close"
+      },
+      "rawBody": "{\"isSuccess\":false,\"code\":\"COMMON404\",\"message\":\"존재하지 않는 평점입니다.\",\"result\":null}",
+      "response": {
+        "isSuccess": false,
+        "code": "COMMON404",
+        "message": "존재하지 않는 평점입니다.",
+        "result": null
+      }
+    },
+    {
+      "key": "05-rating-delete",
+      "title": "평점 삭제 성공",
+      "capturedAt": "2026-11-06T01:24:32+09:00",
+      "method": "DELETE",
+      "url": "http://127.0.0.1:18080/members/1/ratings/1",
+      "request": null,
+      "status": 204,
+      "reason": "",
+      "headers": {
+        "Vary": "Origin",
+        "Date": "Thu, 05 Nov 2026 16:24:33 GMT",
+        "Connection": "close"
+      },
+      "rawBody": "",
+      "response": null
+    },
+    {
+      "key": "06-deleted-not-found",
+      "title": "삭제한 평점 재요청",
+      "capturedAt": "2026-11-06T01:24:32+09:00",
+      "method": "DELETE",
+      "url": "http://127.0.0.1:18080/members/1/ratings/1",
+      "request": null,
+      "status": 404,
+      "reason": "",
+      "headers": {
+        "Vary": "Origin",
+        "Content-Type": "application/json",
+        "Transfer-Encoding": "chunked",
+        "Date": "Thu, 05 Nov 2026 16:24:33 GMT",
+        "Connection": "close"
+      },
+      "rawBody": "{\"isSuccess\":false,\"code\":\"COMMON404\",\"message\":\"존재하지 않는 평점입니다.\",\"result\":null}",
+      "response": {
+        "isSuccess": false,
+        "code": "COMMON404",
+        "message": "존재하지 않는 평점입니다.",
+        "result": null
+      }
+    },
+    {
+      "key": "14-read-after-delete",
+      "title": "삭제 결과 확인",
+      "capturedAt": "2026-11-06T01:24:32+09:00",
+      "method": "GET",
+      "url": "http://127.0.0.1:18080/members/1/ratings",
+      "request": null,
+      "status": 200,
+      "reason": "",
+      "headers": {
+        "Vary": "Origin",
+        "Content-Type": "application/json",
+        "Transfer-Encoding": "chunked",
+        "Date": "Thu, 05 Nov 2026 16:24:33 GMT",
+        "Connection": "close"
+      },
+      "rawBody": "[]",
+      "response": []
+    }
+  ]
+}

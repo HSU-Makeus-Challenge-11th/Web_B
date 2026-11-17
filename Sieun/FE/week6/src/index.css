@@ -1,0 +1,31 @@
+@import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css");
+@import "tailwindcss";
+
+/* Figma Design System의 색상 토큰 */
+@theme {
+  --font-sans:
+    "Pretendard", -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo",
+    "Malgun Gothic", sans-serif;
+
+  --color-surface: #ffffff;
+  --color-page: #f6f7f9;
+  --color-fg: #17191e;
+  --color-fg-secondary: #606774;
+  --color-fg-tertiary: #969da8;
+  --color-line: #e3e6eb;
+  --color-action: #2563eb;
+  --color-action-hover: #1d4ed8;
+  --color-action-pressed: #1748ad;
+  --color-action-disabled: #d9e5ff;
+  --color-danger: #d92d20;
+}
+
+@layer base {
+  body {
+    @apply min-w-[1440px] bg-page font-sans text-fg antialiased;
+  }
+
+  button:not(:disabled) {
+    @apply cursor-pointer;
+  }
+}

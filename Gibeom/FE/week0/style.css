@@ -1,0 +1,89 @@
+:root {
+  font-family: Arial, sans-serif;
+  color: #1f2937;
+  background: #f3f4f6;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  min-height: 100vh;
+  margin: 0;
+  display: grid;
+  place-items: center;
+}
+
+.card {
+  width: 90%;
+  max-width: 520px;
+  padding: 40px;
+  border-radius: 20px;
+  background: #ffffff;
+  box-shadow: 0 16px 40px rgb(15 23 42 / 12%);
+  text-align: center;
+}
+
+.week-label {
+  margin: 0;
+  color: #7c3aed;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+}
+
+h1 {
+  margin: 12px 0;
+}
+
+#message {
+  margin: 0;
+  color: #4b5563;
+  line-height: 1.6;
+}
+
+.skills {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+  margin: 28px 0;
+  padding: 0;
+  list-style: none;
+}
+
+.skill {
+  padding: 8px 14px;
+  border-radius: 999px;
+  color: #6d28d9;
+  background: #ede9fe;
+  font-weight: 700;
+}
+
+#cheer-button {
+  border: 0;
+  border-radius: 10px;
+  padding: 12px 20px;
+  color: #ffffff;
+  background: #7c3aed;
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+#cheer-button:hover {
+  background: #6d28d9;
+  transform: translateY(-2px);
+}
+
+#cheer-button:focus-visible {
+  outline: 3px solid #c4b5fd;
+  outline-offset: 3px;
+}
+
+@media (max-width: 480px) {
+  .card {
+    padding: 28px 20px;
+  }
+}

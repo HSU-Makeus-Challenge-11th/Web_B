@@ -1,0 +1,70 @@
+.movielist {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.poster {
+  position: relative;
+  width: 241.6px;
+  height: 274px;
+}
+
+.movie-poster {
+  width: 241.6px;
+  height: 274px;
+  border-radius: 10px;
+
+  object-fit: cover;
+}
+
+.movie-button {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 34px;
+  height: 34px;
+  padding: 7.5px 6px;
+  border-radius: 8px;
+  border: 1px solid #FFFFFF;
+  background-color: #17191E;
+}
+
+.movie-button[aria-pressed="true"] {
+  border: 1px solid #2563EB;
+  background-color: #2563EB;
+}
+
+.movie-button img {
+  width: 24px;
+  height: 24px;
+  filter: brightness(0) invert(1);
+}
+
+.movie-title {
+  padding-top: 5px;
+  width: 241.6px;
+  height: 17px;
+  font-family: "Pretendard";
+  font-weight: 800;
+  font-size: 14px;
+  line-height: 100%;
+  letter-spacing: 0;
+  color: #17191E;
+}
+
+.movie-date {
+  padding-top: 5px;
+  width: 241.6px;
+  height: 14px;
+  font-family: "Pretendard";
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 100%;
+  letter-spacing: 0;
+  color: #969DA8;
+}
+

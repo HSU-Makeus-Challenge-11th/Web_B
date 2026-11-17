@@ -1,0 +1,163 @@
+
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UMC Movie API 테스트</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 20px;
+        }
+
+        section {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        input {
+            padding: 8px;
+            width: 250px;
+        }
+
+        button {
+            padding: 8px 12px;
+            cursor: pointer;
+        }
+
+        pre {
+            background: #f6f6f6;
+            padding: 12px;
+            border-radius: 6px;
+            white-space: pre-wrap;
+            overflow-wrap: anywhere;
+        }
+
+        .ok { color: green; }
+        .err { color: red; }
+    </style>
+</head>
+<body>
+
+<h1>UMC Movie API 테스트</h1>
+<p>서버: <code id="base"></code></p>
+
+<section>
+    <h2>실습 1. 닉네임 중복 체크</h2>
+    <p>GET /members/nickname/{nickname}</p>
+
+    <input type="text" id="nickname"
+           placeholder="닉네임 입력">
+    <button onclick="checkNickname()">조회</button>
+
+    <pre id="nicknameResult">결과 대기 중...</pre>
+</section>
+
+<section>
+    <h2>실습 2. 이메일 중복 체크</h2>
+    <p>GET /members/email/{email}</p>
+
+    <input type="email" id="email"
+           placeholder="이메일 입력">
+    <button onclick="checkEmail()">조회</button>
+
+    <pre id="emailResult">결과 대기 중...</pre>
+</section>
+
+<section>
+    <h2>실습 3. 유저별 평점 조회</h2>
+    <p>GET /members/{memberId}/ratings</p>
+
+    <input type="number" id="memberId"
+           placeholder="회원 ID 입력" min="1">
+    <button onclick="getRatings()">조회</button>
+
+    <pre id="ratingResult">결과 대기 중...</pre>
+</section>
+
+<script>
+    const BASE_URL = "http://localhost:8080";
+
+    document.getElementById("base").textContent = BASE_URL;
+
+    async function requestApi(path, resultId) {
+        const result = document.getElementById(resultId);
+        result.className = "";
+        result.textContent = "요청 중...";
+
+        try {
+            const response = await fetch(BASE_URL + path);
+            const text = await response.text();
+
+            let data;
+            try {
+                data = JSON.parse(text);
+            } catch {
+                data = text;
+            }
+
+            result.className = response.ok ? "ok" : "err";
+            result.textContent =
+                "HTTP 상태: " + response.status + "\n\n" +
+                JSON.stringify(data, null, 2);
+
+        } catch (error) {
+            result.className = "err";
+            result.textContent =
+                "요청 실패: " + error.message;
+        }
+    }
+
+    function checkNickname() {
+        const nickname =
+            document.getElementById("nickname").value.trim();
+
+        if (!nickname) {
+            alert("닉네임을 입력하세요.");
+            return;
+        }
+
+        requestApi(
+            "/members/nickname/" + encodeURIComponent(nickname),
+            "nicknameResult"
+        );
+    }
+
+    function checkEmail() {
+        const email =
+            document.getElementById("email").value.trim();
+
+        if (!email) {
+            alert("이메일을 입력하세요.");
+            return;
+        }
+
+        requestApi(
+            "/members/email/" + encodeURIComponent(email),
+            "emailResult"
+        );
+    }
+
+    function getRatings() {
+        const memberId =
+            document.getElementById("memberId").value.trim();
+
+        if (!/^[1-9]\d*$/.test(memberId)) {
+            alert("올바른 회원 ID를 입력하세요.");
+            return;
+        }
+
+        requestApi(
+            "/members/" + memberId + "/ratings",
+            "ratingResult"
+        );
+    }
+</script>
+
+</body>
+</html>
