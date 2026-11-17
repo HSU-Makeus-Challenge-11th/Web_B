@@ -3,6 +3,7 @@ import { Link, useParams } from "@tanstack/react-router";
 import { getMovieDetail } from "../../api/movies/get-movie-detail";
 import { cn } from "../../utils/cn";
 import { BookmarkButton } from "../../components/bookmark-button";
+import { MovieRating } from "../../components/movie-rating";
 import { getMovieDetailErrorMessage } from "../../utils/movies/get-movie-detail-error-message";
 import {
   getTmdbBackdropUrl,
@@ -104,27 +105,10 @@ function MovieDetailPageContent({ movieId }: { movieId: number }) {
               ? `러닝타임은 ${runtimeText}입니다.`
               : runtimeText}
           </p>
-          <BookmarkButton movieId={movie.id} />
+          <BookmarkButton movieId={movie.id} movieTitle={movie.title} />
         </article>
 
-        <aside className="border-l border-gray-200 pl-7 max-[1000px]:col-span-full max-[1000px]:border-t max-[1000px]:border-l-0 max-[1000px]:pt-[22px] max-[1000px]:pl-0 [&_h2]:mb-1 [&_h2]:text-lg [&_h2]:font-black [&_h2]:text-gray-900 [&_p]:mb-3.5 [&_p]:text-[13px] [&_p]:text-gray-400 [&_textarea]:block [&_textarea]:min-h-[116px] [&_textarea]:w-full [&_textarea]:resize-y [&_textarea]:rounded-md [&_textarea]:border [&_textarea]:border-gray-200 [&_textarea]:bg-white [&_textarea]:p-3 [&_textarea]:text-[13px] [&_textarea]:leading-normal [&_textarea]:text-gray-900 [&_textarea]:outline-blue-600 [&_textarea]:placeholder:text-gray-400" aria-labelledby="rating-title">
-          <h2 id="rating-title">내 평점</h2>
-          <p>별점을 주고 한줄평을 남겨보세요.</p>
-          <div className="mb-3.5 flex gap-[7px] [&_button]:inline-flex [&_button]:size-7 [&_button]:items-center [&_button]:justify-center [&_button]:rounded-md [&_button]:border [&_button]:border-gray-200 [&_button]:bg-white [&_img]:size-[15px]" aria-label="별점 선택">
-            {[1, 2, 3, 4, 5].map((star) => (
-              <button key={star} type="button" aria-label={`${star}점`}>
-                <img src="/icons/movie-icons/star.svg" alt="" aria-hidden="true" />
-              </button>
-            ))}
-          </div>
-          <textarea
-            aria-label="한줄평"
-            placeholder="한줄평 또는 느낀 점을 남겨보세요."
-          />
-          <button className="mt-3.5 w-full rounded-md border-0 bg-gray-900 p-3 text-[13px] font-black text-white" type="button">
-            평점 저장
-          </button>
-        </aside>
+        <MovieRating movieId={movie.id} />
       </section>
     </main>
   );

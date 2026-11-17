@@ -1,22 +1,26 @@
-import { useState, type SubmitEvent } from "react";
+import { useState } from "react";
 import { Link } from "@tanstack/react-router";
+import { useLoginMutation } from "@/hooks/use-login-mutation";
 import "./signup-page.css";
 
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 export function LoginPage() {
   const [form, setForm] = useState({ email: "", password: "" });
-  const [hasCheckedForm, setHasCheckedForm] = useState(false);
+  const loginMutation = useLoginMutation();
   const isEmailValid = EMAIL_REGEX.test(form.email.trim());
   const showEmailError = form.email.length > 0 && !isEmailValid;
-  const canSubmit = isEmailValid && form.password.length > 0;
+  const canSubmit = EMAIL_REGEX.test(form.email.trim()) && form.password.length > 0;
 
-  function handleSubmit(event: SubmitEvent<HTMLFormElement>) {
+  const handleSubmit = (event: React.SubmitEvent<HTMLFormElement>) => {
     event.preventDefault();
-    if (!canSubmit) return;
-    setHasCheckedForm(true);
-    // 워크북에 따라 실제 로그인 API와 토큰 처리는 8주차에서 연결합니다.
-  }
+    if (!canSubmit || loginMutation.isPending) return;
+
+    loginMutation.mutate({
+      email: form.email.trim(),
+      password: form.password,
+    });
+  };
 
   return (
     <main className="signup-page">
@@ -30,7 +34,7 @@ export function LoginPage() {
               <input id="login-email" name="email" type="email" autoComplete="email" placeholder="name@example.com"
                 value={form.email} required aria-invalid={showEmailError}
                 aria-describedby={showEmailError ? "login-email-error" : undefined}
-                onChange={(event) => { setForm({ ...form, email: event.target.value }); setHasCheckedForm(false); }} />
+                onChange={(event) => { setForm({ ...form, email: event.target.value }); }} />
             </div>
             {showEmailError && <p id="login-email-error" className="signup-field__error" role="status">올바른 이메일 형식으로 입력해 주세요.</p>}
           </div>
@@ -39,11 +43,12 @@ export function LoginPage() {
             <div className="signup-input-row">
               <input id="login-password" name="password" type="password" autoComplete="current-password" placeholder="비밀번호 입력"
                 value={form.password} required
-                onChange={(event) => { setForm({ ...form, password: event.target.value }); setHasCheckedForm(false); }} />
+                onChange={(event) => { setForm({ ...form, password: event.target.value }); }} />
             </div>
           </div>
-          <button className="signup-submit-button" type="submit" disabled={!canSubmit}>로그인</button>
-          {hasCheckedForm && <p className="text-sm text-green-700" role="status">입력한 정보를 확인했어요.</p>}
+          <button className="signup-submit-button" type="submit" disabled={!canSubmit || loginMutation.isPending}>
+            {loginMutation.isPending ? "로그인 중" : "로그인"}
+          </button>
         </form>
         <p className="signup-panel__login">아직 계정이 없나요? <Link to="/signup" className="font-bold text-[#4b60e8]">회원가입</Link></p>
       </section>

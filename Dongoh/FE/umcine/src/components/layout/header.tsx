@@ -1,7 +1,18 @@
+import { useQuery } from "@tanstack/react-query";
 import { Link, useRouterState } from "@tanstack/react-router";
+import { getMe } from "@/api/members/me";
+import { useAuthStore } from "@/stores/auth-store";
 import { cn } from "../../utils/cn";
 
 export function Header() {
+  const accessToken = useAuthStore((state) => state.accessToken);
+  const meQuery = useQuery({
+    queryKey: ["members", "me"],
+    queryFn: ({ signal }) => getMe(signal),
+    enabled: Boolean(accessToken),
+    staleTime: 5 * 60 * 1000,
+    retry: false,
+  });
   const isAccountPage = useRouterState({
     select: (state) => ["/signup", "/login", "/profile", "/profile-edit"].includes(state.location.pathname.replace(/\/$/, "")),
   });
@@ -25,7 +36,13 @@ export function Header() {
           <Link to="/search" className="grid size-10 place-items-center rounded-lg border border-gray-200 max-[380px]:hidden" aria-label="영화 검색">
             <img src="/icons/movie-icons/search.svg" alt="" aria-hidden="true" className="size-5 opacity-65" />
           </Link>
-          <Link to="/login" className="rounded-md bg-[#4b60e8] px-4 py-2.5 text-[13px] font-bold text-white hover:bg-[#3d50d4]">로그인</Link>
+          {!accessToken ? (
+            <Link to="/login" className="rounded-md bg-[#4b60e8] px-4 py-2.5 text-[13px] font-bold text-white hover:bg-[#3d50d4]">로그인</Link>
+          ) : meQuery.isLoading ? (
+            <span className="h-10 w-24 animate-pulse rounded-lg bg-gray-200" />
+          ) : (
+            <Link to="/profile" className="rounded-md bg-[#4b60e8] px-4 py-2.5 text-[13px] font-bold text-white hover:bg-[#3d50d4]">마이페이지</Link>
+          )}
         </div>
       </nav>
     </header>

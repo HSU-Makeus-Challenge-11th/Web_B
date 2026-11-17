@@ -4,6 +4,7 @@ import { createRouter, RouterProvider } from "@tanstack/react-router";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { routeTree } from "./routeTree.gen";
+import { useAuthStore } from "./stores/auth-store";
 import "./index.css";
 
 const router = createRouter({ routeTree });
@@ -14,6 +15,19 @@ const queryClient = new QueryClient({
       staleTime: ONE_MINUTE,
     },
   },
+});
+
+useAuthStore.subscribe((state, previousState) => {
+  if (state.accessToken === previousState.accessToken) return;
+
+  const filters = {
+    predicate: (query: { queryKey: readonly unknown[] }) =>
+      ["members", "favorites", "ratings"].includes(
+        String(query.queryKey[0]),
+      ),
+  };
+  void queryClient.cancelQueries(filters);
+  queryClient.removeQueries(filters);
 });
 
 declare module "@tanstack/react-router" {
