@@ -1,0 +1,50 @@
+@import "tailwindcss";
+
+.auth-page { min-height: calc(100vh - 91px); display:flex; justify-content:center; align-items:center; padding:64px 20px; }
+.auth-form { width:430px; max-width:100%; }
+.auth-form h1,.profile-title h1 { margin:0 0 20px; font-size:32px; line-height:1.25; font-weight:800; letter-spacing:-1px; }
+.auth-field { margin-bottom:18px; }
+.auth-field > label { display:block; margin-bottom:8px; font-size:14px; font-weight:700; }
+.auth-input-row { display:flex; align-items:center; background:white; border:1px solid #e3e6eb; border-radius:8px; overflow:hidden; min-height:48px; }
+.auth-input-row:focus-within { outline:2px solid #2563eb; outline-offset:2px; }
+.auth-input-row input { width:100%; min-width:0; padding:13px 15px; font-size:14px; border:0; outline:none; background:transparent; }
+.auth-input-row input::placeholder { color:#969da8; }
+.auth-input-row input:read-only { color:#606774; background:#fafbfc; }
+.auth-input-error { border-color:#dc2626; }
+.duplicate-button { border:0; background:none; white-space:nowrap; color:#2563eb; font-size:12px; font-weight:700; padding:10px 15px; cursor:pointer; }
+button:disabled { cursor:not-allowed; opacity:.5; }
+.primary-button { display:inline-flex; align-items:center; justify-content:center; border:0; border-radius:7px; min-height:42px; padding:12px 18px; color:white; background:#365de5; font-size:14px; font-weight:700; text-decoration:none; cursor:pointer; }
+.primary-button:hover:not(:disabled) { background:#254acb; }
+.auth-submit { width:100%; margin-top:0; min-height:46px; }
+.field-hint,.field-error,.form-success { margin:6px 0 0; font-size:12px; line-height:1.6; }
+.field-hint { color:#969da8; }
+.field-error { color:#c12828; }
+.form-success { color:#157347; }
+.auth-switch { text-align:center; color:#606774; font-size:12px; margin-top:18px; }
+.auth-switch a,.profile-return { color:#2563eb; font-weight:700; }
+.profile-page { max-width:1440px; margin:0 auto; padding:30px 80px; min-height:calc(100vh - 150px); }
+.profile-title { display:flex; justify-content:space-between; gap:20px; align-items:flex-start; padding:0 0 24px; }
+.profile-title h1 { margin:0; }
+.profile-info { border-top:1px solid #e3e6eb; border-bottom:1px solid #e3e6eb; padding:18px 0 14px; }
+.profile-info > h2,.bookmarks > h2 { font-size:16px; font-weight:700; margin:0 0 18px; }
+.profile-info-row { display:grid; grid-template-columns:82px minmax(150px,1fr) minmax(220px,1.6fr); align-items:center; gap:28px; }
+.avatar { display:flex; width:80px; height:80px; border-radius:50%; align-items:center; justify-content:center; background:#e3e6eb; overflow:hidden; }
+.avatar img { width:100%; height:100%; object-fit:cover; }
+.avatar img[src$="person.svg"] { width:40px; height:40px; }
+.info-label { display:block; color:#969da8; font-size:12px; margin-bottom:8px; }
+.profile-info-row strong { font-size:14px; }
+.bookmarks { padding:24px 0; }
+.profile-movies { display:grid; grid-template-columns:repeat(5,minmax(0,1fr)); gap:18px; }
+.empty-bookmarks { padding:60px 0; color:#969da8; font-size:14px; text-align:center; }
+.edit-page { display:flex; flex-direction:column; min-height:calc(100vh - 91px); }
+.edit-grid { display:grid; grid-template-columns:1fr 1fr; padding:16px 0 60px; }
+.avatar-upload { display:flex; align-items:center; flex-direction:column; padding:20px; }
+.avatar-upload label { display:flex; flex-direction:column; align-items:center; gap:8px; cursor:pointer; }
+.avatar-upload strong { font-size:14px; }
+.avatar-upload label > span:last-child { color:#969da8; font-size:11px; }
+.avatar-upload input { max-width:220px; font-size:11px; margin-top:12px; }
+.profile-return { display:inline-block; margin-top:16px; font-size:12px; }
+.withdraw { margin-top:auto; border:1px solid #dca6a6; background:#f4e6e6; border-radius:7px; padding:16px; display:flex; align-items:center; justify-content:space-between; color:#ba3e3e; font-size:12px; }
+.withdraw p { margin:5px 0 0; font-size:10px; }
+.withdraw button { padding:12px; border:1px solid #dca6a6; border-radius:7px; background:white; font-weight:700; }
+@media(max-width:700px) { .auth-page{padding:36px 20px;} .profile-page{padding:28px 20px;} .profile-title h1{font-size:26px;} .profile-info-row{grid-template-columns:64px 1fr;gap:16px;} .profile-info-row>div:last-child{grid-column:2;} .avatar{width:64px;height:64px;} .profile-movies{grid-template-columns:repeat(2,minmax(0,1fr));} .edit-grid{grid-template-columns:1fr;} .withdraw{gap:12px;} }
