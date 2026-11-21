@@ -1,10 +1,7 @@
 import { useState } from "react";
 import { checkEmailDuplicate } from "../../api/members/check-email-duplicate";
 import { checkNicknameDuplicate } from "../../api/members/check-nickname-duplicate";
-import { signup } from "../../api/members/signup";
-import { getApiErrorMessage } from "../../api/api-error";
-import { useMemberStore } from "../../stores/member-store";
-import { useNavigate } from "@tanstack/react-router";
+import { useSignupMutation } from "../../hooks/use-signup-mutation";
 
 // 이메일 형식 검사
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -34,9 +31,7 @@ export function SignupPage() {
     email: DEFAULT_DUPLICATE_CHECK,
     nickname: DEFAULT_DUPLICATE_CHECK,
   });
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const setMemberId = useMemberStore((state) => state.setMemberId);
-  const navigate = useNavigate();
+  const signupMutation = useSignupMutation();
 
   // 입력값의 유효성 검사
   const isEmailValid = EMAIL_REGEX.test(form.email.trim());
@@ -65,7 +60,7 @@ export function SignupPage() {
     duplicateCheck.nickname.isAvailable;
 
   const handleChangeField = (key: DefaultFormKey, value: DefaultFormValue) => {
-    if (isSubmitting) return;
+    if (signupMutation.isPending) return;
     if (key === "email" || key === "nickname") {
       if (duplicateCheck[key].isChecking) return;
       setDuplicateCheck((prev) => ({
@@ -78,7 +73,7 @@ export function SignupPage() {
 
   const handleCheckDuplicate = async (key: DuplicateCheckKey) => {
     const isValid = key === "email" ? isEmailValid : isNicknameValid;
-    if (!isValid || duplicateCheck[key].isChecking || isSubmitting) return;
+    if (!isValid || duplicateCheck[key].isChecking || signupMutation.isPending) return;
 
     const label = key === "email" ? "이메일" : "닉네임";
     setDuplicateCheck((prev) => ({
@@ -115,29 +110,15 @@ export function SignupPage() {
     }
   };
 
-  const handleSubmit = async (e: React.SubmitEvent<HTMLFormElement>) => {
+  const handleSubmit = (e: React.SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (!canSubmit || isSubmitting) return;
+    if (!canSubmit || signupMutation.isPending) return;
 
-    setIsSubmitting(true);
-    try {
-      const response = await signup({
-        email: form.email.trim(),
-        nickname: form.nickname.trim(),
-        password: form.password,
-      });
-      if (!response.isSuccess) {
-        alert(response.message || "회원가입에 실패했어요. 다시 시도해 주세요.");
-        return;
-      }
-      setMemberId(response.result.memberId);
-      alert(response.message);
-      navigate({ to: "/login" });
-    } catch (error) {
-      alert(getApiErrorMessage(error, "회원가입에 실패했어요. 다시 시도해 주세요."));
-    } finally {
-      setIsSubmitting(false);
-    }
+    signupMutation.mutate({
+      email: form.email.trim(),
+      nickname: form.nickname.trim(),
+      password: form.password,
+    });
   };
 
   // noValidate는 폼 제출 시 브라우저의 기본 유효성 검사를 끔
@@ -159,11 +140,11 @@ export function SignupPage() {
               autoComplete="email"
               value={form.email}
               onChange={(e) => handleChangeField("email", e.target.value)}
-              disabled={duplicateCheck.email.isChecking || isSubmitting}
+              disabled={duplicateCheck.email.isChecking || signupMutation.isPending}
               aria-invalid={showEmailError}
               aria-describedby="signup-email-hint"
             />
-            <button className="rounded-md bg-gray-800 px-3 text-sm text-white disabled:opacity-40" type="button" disabled={!isEmailValid || duplicateCheck.email.isChecking || isSubmitting} onClick={() => handleCheckDuplicate("email")}>
+            <button className="rounded-md bg-gray-800 px-3 text-sm text-white disabled:opacity-40" type="button" disabled={!isEmailValid || duplicateCheck.email.isChecking || signupMutation.isPending} onClick={() => handleCheckDuplicate("email")}>
               {duplicateCheck.email.isChecking ? "확인 중" : "중복 확인"}
             </button>
           </div>
@@ -180,11 +161,11 @@ export function SignupPage() {
               autoComplete="nickname"
               value={form.nickname}
               onChange={(e) => handleChangeField("nickname", e.target.value)}
-              disabled={duplicateCheck.nickname.isChecking || isSubmitting}
+              disabled={duplicateCheck.nickname.isChecking || signupMutation.isPending}
               aria-invalid={showNicknameError}
               aria-describedby="signup-nickname-hint"
             />
-            <button className="rounded-md bg-gray-800 px-3 text-sm text-white disabled:opacity-40" type="button" disabled={!isNicknameValid || duplicateCheck.nickname.isChecking || isSubmitting} onClick={() => handleCheckDuplicate("nickname")}>
+            <button className="rounded-md bg-gray-800 px-3 text-sm text-white disabled:opacity-40" type="button" disabled={!isNicknameValid || duplicateCheck.nickname.isChecking || signupMutation.isPending} onClick={() => handleCheckDuplicate("nickname")}>
               {duplicateCheck.nickname.isChecking ? "확인 중" : "중복 확인"}
             </button>
           </div>
@@ -194,16 +175,16 @@ export function SignupPage() {
         </div>
         <div>
           <label className="mb-2 block text-sm font-bold" htmlFor="signup-password">비밀번호</label>
-          <input className="w-full rounded-md border border-gray-300 p-2 disabled:bg-gray-100" id="signup-password" type="password" autoComplete="new-password" value={form.password} onChange={(e) => handleChangeField("password", e.target.value)} disabled={isSubmitting} aria-invalid={showPasswordError} aria-describedby="signup-password-hint" />
+          <input className="w-full rounded-md border border-gray-300 p-2 disabled:bg-gray-100" id="signup-password" type="password" autoComplete="new-password" value={form.password} onChange={(e) => handleChangeField("password", e.target.value)} disabled={signupMutation.isPending} aria-invalid={showPasswordError} aria-describedby="signup-password-hint" />
           <p className={`mt-2 text-xs ${showPasswordError ? "text-red-600" : "text-gray-500"}`} id="signup-password-hint">영문 대소문자, 숫자, 특수문자(!@#$%^&*)를 포함해 8자 이상 입력해 주세요.</p>
         </div>
         <div>
           <label className="mb-2 block text-sm font-bold" htmlFor="signup-password-confirm">비밀번호 확인</label>
-          <input className="w-full rounded-md border border-gray-300 p-2 disabled:bg-gray-100" id="signup-password-confirm" type="password" autoComplete="new-password" value={form.passwordConfirm} onChange={(e) => handleChangeField("passwordConfirm", e.target.value)} disabled={isSubmitting} aria-invalid={showPasswordConfirmError} aria-describedby="signup-password-confirm-hint" />
+          <input className="w-full rounded-md border border-gray-300 p-2 disabled:bg-gray-100" id="signup-password-confirm" type="password" autoComplete="new-password" value={form.passwordConfirm} onChange={(e) => handleChangeField("passwordConfirm", e.target.value)} disabled={signupMutation.isPending} aria-invalid={showPasswordConfirmError} aria-describedby="signup-password-confirm-hint" />
           <p className={`mt-2 text-xs ${showPasswordConfirmError ? "text-red-600" : "text-gray-500"}`} id="signup-password-confirm-hint">{showPasswordConfirmError ? "비밀번호가 일치하지 않아요." : "비밀번호를 다시 입력해 주세요."}</p>
         </div>
-        <button className="rounded-md bg-blue-600 p-3 font-bold text-white disabled:cursor-not-allowed disabled:opacity-40" type="submit" disabled={!canSubmit || isSubmitting}>
-          {isSubmitting ? "가입 중" : "가입하기"}
+        <button className="rounded-md bg-blue-600 p-3 font-bold text-white disabled:cursor-not-allowed disabled:opacity-40" type="submit" disabled={!canSubmit || signupMutation.isPending}>
+          {signupMutation.isPending ? "가입 중" : "가입하기"}
         </button>
       </form>
     </main>
