@@ -1,6 +1,5 @@
-import { useQuery } from "@tanstack/react-query";
 import { Link, useRouterState } from "@tanstack/react-router";
-import { getMe } from "../../api/members/me";
+import { useMeQuery } from "../../hooks/use-me-query";
 import { useAuthStore } from "../../stores/auth-store";
 import { cn } from "../../utils/cn";
 
@@ -12,14 +11,7 @@ export function Header() {
   const isSearchRoute = pathname === "/search";
   const isProfileRoute = pathname.startsWith("/mypage");
   const accessToken = useAuthStore((state) => state.accessToken);
-  const meQuery = useQuery({
-    queryKey: ["members", "me"],
-    queryFn: getMe,
-    enabled: Boolean(accessToken),
-    staleTime: 5 * 60 * 1000,
-    // 401로 토큰을 지운 뒤 같은 조회를 다시 보내지 않도록 재시도를 끔
-    retry: false,
-  });
+  const meQuery = useMeQuery();
 
   const accountLinkClass =
     "inline-flex h-10 min-w-14 items-center justify-center rounded-[7px] border-0 bg-[#2463eb] px-2 text-xs font-bold text-white no-underline hover:brightness-95 focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-blue-500/40 min-[481px]:px-4 min-[481px]:text-sm";
