@@ -1,6 +1,8 @@
+import { useQuery } from "@tanstack/react-query";
 import { Link, useRouterState } from "@tanstack/react-router";
+import { getMe } from "../../api/members/me";
+import { useAuthStore } from "../../stores/auth-store";
 import { cn } from "../../utils/cn";
-import { useProfileStore } from "../../stores/profile-store";
 
 export function Header() {
   const pathname = useRouterState({
@@ -9,9 +11,18 @@ export function Header() {
   const isMovieRoute = pathname === "/" || pathname.startsWith("/movies/");
   const isSearchRoute = pathname === "/search";
   const isProfileRoute = pathname.startsWith("/mypage");
-  const isPreviewing = useProfileStore((state) => state.isPreviewing);
-  const endPreview = useProfileStore((state) => state.endPreview);
+  const accessToken = useAuthStore((state) => state.accessToken);
+  const meQuery = useQuery({
+    queryKey: ["members", "me"],
+    queryFn: getMe,
+    enabled: Boolean(accessToken),
+    staleTime: 5 * 60 * 1000,
+    // 401로 토큰을 지운 뒤 같은 조회를 다시 보내지 않도록 재시도를 끔
+    retry: false,
+  });
 
+  const accountLinkClass =
+    "inline-flex h-10 min-w-14 items-center justify-center rounded-[7px] border-0 bg-[#2463eb] px-2 text-xs font-bold text-white no-underline hover:brightness-95 focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-blue-500/40 min-[481px]:px-4 min-[481px]:text-sm";
   const navigationLinkClass =
     "inline-flex h-[70px] items-center border-b-2 text-[15px] font-semibold no-underline min-[481px]:h-[82px] focus-visible:rounded-sm focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-blue-500/40";
 
@@ -80,13 +91,20 @@ export function Header() {
           >
             <img className="size-[22px] opacity-70" src="/icons/search.svg" alt="" />
           </Link>
-          <Link
-            className="inline-flex h-10 min-w-14 items-center justify-center rounded-[7px] border-0 bg-[#2463eb] px-2 text-xs font-bold text-white no-underline hover:brightness-95 focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-blue-500/40 min-[481px]:px-4 min-[481px]:text-sm"
-            to="/login"
-            onClick={() => { if (isPreviewing) endPreview(); }}
-          >
-            {isPreviewing ? "로그아웃" : "로그인"}
-          </Link>
+          {!accessToken ? (
+            <Link className={accountLinkClass} to="/login">
+              로그인
+            </Link>
+          ) : meQuery.isLoading ? (
+            <span
+              className="h-10 w-24 animate-pulse rounded-lg bg-gray-200"
+              aria-label="내 정보를 불러오는 중"
+            />
+          ) : (
+            <Link className={accountLinkClass} to="/mypage">
+              마이페이지
+            </Link>
+          )}
         </div>
       </div>
     </header>
