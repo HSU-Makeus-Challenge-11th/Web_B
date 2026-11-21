@@ -8,11 +8,11 @@ const ratingKeys = {
   member: (memberId: number) => ["members", memberId, "ratings"] as const,
 };
 
-export function useMemberRatingsQuery(memberId: number | undefined) {
+export function useMemberRatingsQuery(memberId: number | null) {
   return useQuery({
     queryKey: ratingKeys.member(memberId ?? 0),
     queryFn: () => getMemberRatings(memberId as number),
-    enabled: memberId !== undefined,
+    enabled: memberId !== null,
   });
 }
 

@@ -1,20 +1,13 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { createRouter, RouterProvider } from "@tanstack/react-router";
+import { queryClient } from "./lib/query-client";
 import { routeTree } from "./routeTree.gen";
 import "./index.css";
 
 const router = createRouter({ routeTree });
-const ONE_MINUTE = 60 * 1000;
-const queryClient = new QueryClient({
-  defaultOptions: {
-    queries: {
-      staleTime: ONE_MINUTE,
-    },
-  },
-});
 
 declare module "@tanstack/react-router" {
   interface Register {

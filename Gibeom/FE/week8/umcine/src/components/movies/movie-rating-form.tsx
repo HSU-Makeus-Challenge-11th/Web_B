@@ -2,14 +2,13 @@ import { useState } from "react";
 import { Link } from "@tanstack/react-router";
 import { getApiErrorMessage } from "../../api/api-error";
 import type { Rating } from "../../api/ratings/get-member-ratings";
-import { useMeQuery } from "../../hooks/use-me-query";
 import {
   useCreateRatingMutation,
   useDeleteRatingMutation,
   useMemberRatingsQuery,
   useUpdateRatingMutation,
 } from "../../hooks/use-ratings";
-import { useAuthStore } from "../../stores/auth-store";
+import { useAuthStore, useMemberId } from "../../stores/auth-store";
 import { cn } from "../../utils/cn";
 
 const MAX_COMMENT_LENGTH = 500;
@@ -20,9 +19,8 @@ interface MovieRatingFormProps {
 
 export function MovieRatingForm({ movieId }: MovieRatingFormProps) {
   const accessToken = useAuthStore((state) => state.accessToken);
-  const meQuery = useMeQuery();
-  // GET /members/{memberId}/ratings에 필요한 memberId는 내 정보 조회 응답에서 가져옴
-  const memberId = meQuery.data?.memberId;
+  // GET /members/{memberId}/ratings에 필요한 memberId는 토큰에서 읽음
+  const memberId = useMemberId();
   const ratingsQuery = useMemberRatingsQuery(memberId);
 
   return (
@@ -40,18 +38,16 @@ export function MovieRatingForm({ movieId }: MovieRatingFormProps) {
             로그인
           </Link>
         </p>
-      ) : meQuery.isError || ratingsQuery.isError ? (
+      ) : memberId === null ? (
+        <p className="mt-2 mb-0 text-xs text-red-600" role="alert">회원 정보를 확인할 수 없어요. 다시 로그인해 주세요.</p>
+      ) : ratingsQuery.isError ? (
         <p className="mt-2 mb-0 text-xs text-red-600" role="alert">
-          {getApiErrorMessage(meQuery.error ?? ratingsQuery.error, "평점을 불러오지 못했어요.")}
-          <button
-            className="ml-1 cursor-pointer underline"
-            type="button"
-            onClick={() => void (meQuery.isError ? meQuery.refetch() : ratingsQuery.refetch())}
-          >
+          {getApiErrorMessage(ratingsQuery.error, "평점을 불러오지 못했어요.")}
+          <button className="ml-1 cursor-pointer underline" type="button" onClick={() => void ratingsQuery.refetch()}>
             다시 시도
           </button>
         </p>
-      ) : memberId === undefined || ratingsQuery.isPending ? (
+      ) : ratingsQuery.isPending ? (
         <p className="mt-2 mb-0 text-xs text-[#8b95a5]">내 평점을 불러오는 중이에요.</p>
       ) : (
         <RatingEditor

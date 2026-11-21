@@ -1,4 +1,4 @@
-import { Link, useRouterState } from "@tanstack/react-router";
+import { Link, useNavigate, useRouterState } from "@tanstack/react-router";
 import { useMeQuery } from "../../hooks/use-me-query";
 import { useAuthStore } from "../../stores/auth-store";
 import { cn } from "../../utils/cn";
@@ -11,7 +11,15 @@ export function Header() {
   const isSearchRoute = pathname === "/search";
   const isProfileRoute = pathname.startsWith("/mypage");
   const accessToken = useAuthStore((state) => state.accessToken);
+  const setAccessToken = useAuthStore((state) => state.setAccessToken);
   const meQuery = useMeQuery();
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    // 토큰을 지우면 auth store가 내 정보·즐겨찾기 캐시도 함께 비움
+    setAccessToken(null);
+    navigate({ to: "/" });
+  };
 
   const accountLinkClass =
     "inline-flex h-10 min-w-14 items-center justify-center rounded-[7px] border-0 bg-[#2463eb] px-2 text-xs font-bold text-white no-underline hover:brightness-95 focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-blue-500/40 min-[481px]:px-4 min-[481px]:text-sm";
@@ -93,9 +101,18 @@ export function Header() {
               aria-label="내 정보를 불러오는 중"
             />
           ) : (
-            <Link className={accountLinkClass} to="/mypage">
-              마이페이지
-            </Link>
+            <>
+              <Link className={accountLinkClass} to="/mypage">
+                마이페이지
+              </Link>
+              <button
+                className="h-10 cursor-pointer rounded-[7px] border border-[#d9dee7] bg-white px-2 text-xs font-bold text-[#555d6c] hover:brightness-95 focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-blue-500/40 min-[481px]:px-3 min-[481px]:text-sm"
+                type="button"
+                onClick={handleLogout}
+              >
+                로그아웃
+              </button>
+            </>
           )}
         </div>
       </div>

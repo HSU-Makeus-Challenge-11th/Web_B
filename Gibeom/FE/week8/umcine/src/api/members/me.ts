@@ -1,7 +1,6 @@
 import { authApi } from "../auth-api";
 
 export interface MemberInfo {
-  memberId: number;
   email: string;
   nickname: string;
   createdAt: string;
