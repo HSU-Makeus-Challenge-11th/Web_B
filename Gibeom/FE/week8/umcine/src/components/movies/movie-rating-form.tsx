@@ -1,11 +1,15 @@
 import { useState } from "react";
 import { Link } from "@tanstack/react-router";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { getApiErrorMessage } from "../../api/api-error";
-import { createRating } from "../../api/ratings/create-rating";
-import { getMemberRatings, type Rating } from "../../api/ratings/get-member-ratings";
-import { updateRating } from "../../api/ratings/update-rating";
-import { useMemberStore } from "../../stores/member-store";
+import type { Rating } from "../../api/ratings/get-member-ratings";
+import { useMeQuery } from "../../hooks/use-me-query";
+import {
+  useCreateRatingMutation,
+  useDeleteRatingMutation,
+  useMemberRatingsQuery,
+  useUpdateRatingMutation,
+} from "../../hooks/use-ratings";
+import { useAuthStore } from "../../stores/auth-store";
 import { cn } from "../../utils/cn";
 
 const MAX_COMMENT_LENGTH = 500;
@@ -15,12 +19,11 @@ interface MovieRatingFormProps {
 }
 
 export function MovieRatingForm({ movieId }: MovieRatingFormProps) {
-  const memberId = useMemberStore((state) => state.memberId);
-  const ratingsQuery = useQuery({
-    queryKey: ["members", memberId, "ratings"],
-    queryFn: () => getMemberRatings(memberId as number),
-    enabled: memberId !== null,
-  });
+  const accessToken = useAuthStore((state) => state.accessToken);
+  const meQuery = useMeQuery();
+  // GET /members/{memberId}/ratings에 필요한 memberId는 내 정보 조회 응답에서 가져옴
+  const memberId = meQuery.data?.memberId;
+  const ratingsQuery = useMemberRatingsQuery(memberId);
 
   return (
     <aside
@@ -30,28 +33,32 @@ export function MovieRatingForm({ movieId }: MovieRatingFormProps) {
       <h2 className="m-0 text-[17px] font-bold" id="rating-title">
         내 평점
       </h2>
-      {memberId === null ? (
+      {!accessToken ? (
         <p className="mt-2 mb-0 text-xs text-[#8b95a5]">
-          평점은 회원가입 후 남길 수 있어요.
-          <Link className="ml-1 font-semibold text-[#2463eb] no-underline" to="/signup">
-            회원가입
+          평점은 로그인 후 남길 수 있어요.
+          <Link className="ml-1 font-semibold text-[#2463eb] no-underline" to="/login">
+            로그인
           </Link>
         </p>
-      ) : ratingsQuery.isPending ? (
-        <p className="mt-2 mb-0 text-xs text-[#8b95a5]">내 평점을 불러오는 중이에요.</p>
-      ) : ratingsQuery.isError ? (
+      ) : meQuery.isError || ratingsQuery.isError ? (
         <p className="mt-2 mb-0 text-xs text-red-600" role="alert">
-          {getApiErrorMessage(ratingsQuery.error, "평점을 불러오지 못했어요.")}
-          <button className="ml-1 cursor-pointer underline" type="button" onClick={() => void ratingsQuery.refetch()}>
+          {getApiErrorMessage(meQuery.error ?? ratingsQuery.error, "평점을 불러오지 못했어요.")}
+          <button
+            className="ml-1 cursor-pointer underline"
+            type="button"
+            onClick={() => void (meQuery.isError ? meQuery.refetch() : ratingsQuery.refetch())}
+          >
             다시 시도
           </button>
         </p>
+      ) : memberId === undefined || ratingsQuery.isPending ? (
+        <p className="mt-2 mb-0 text-xs text-[#8b95a5]">내 평점을 불러오는 중이에요.</p>
       ) : (
         <RatingEditor
           key={memberId}
           memberId={memberId}
           movieId={movieId}
-          myRating={ratingsQuery.data.result.find((rating) => rating.movieId === movieId)}
+          myRating={ratingsQuery.data.find((rating) => rating.movieId === movieId)}
         />
       )}
     </aside>
@@ -68,21 +75,28 @@ function RatingEditor({ memberId, movieId, myRating }: RatingEditorProps) {
   const [score, setScore] = useState(myRating?.score ?? 0);
   const [comment, setComment] = useState(myRating?.comment ?? "");
   const [message, setMessage] = useState<{ text: string; isError: boolean } | null>(null);
-  const queryClient = useQueryClient();
+  const createMutation = useCreateRatingMutation(memberId);
+  const updateMutation = useUpdateRatingMutation(memberId);
+  const deleteMutation = useDeleteRatingMutation(memberId);
+  const isPending = createMutation.isPending || updateMutation.isPending || deleteMutation.isPending;
 
-  const saveMutation = useMutation({
-    mutationFn: (): Promise<{ message: string }> =>
-      myRating
-        ? updateRating(memberId, myRating.ratingId, { score, comment: comment.trim() })
-        : createRating(memberId, { movieId, score, comment: comment.trim() }),
-    onSuccess: (response) => {
-      setMessage({ text: response.message, isError: false });
-      void queryClient.invalidateQueries({ queryKey: ["members", memberId, "ratings"] });
-    },
-    onError: (error) => {
-      setMessage({ text: getApiErrorMessage(error, "평점을 저장하지 못했어요. 다시 시도해 주세요."), isError: true });
-    },
-  });
+  const handleError = (error: Error, fallback: string) => {
+    setMessage({ text: getApiErrorMessage(error, fallback), isError: true });
+  };
+
+  function handleDelete() {
+    if (!myRating || isPending) return;
+    if (!confirm("남긴 평점을 삭제할까요?")) return;
+
+    deleteMutation.mutate(myRating.ratingId, {
+      onSuccess: (response) => {
+        setScore(0);
+        setComment("");
+        setMessage({ text: response.message, isError: false });
+      },
+      onError: (error) => handleError(error, "평점을 삭제하지 못했어요. 다시 시도해 주세요."),
+    });
+  }
 
   function handleSave() {
     if (score < 1 || score > 5) {
@@ -93,7 +107,18 @@ function RatingEditor({ memberId, movieId, myRating }: RatingEditorProps) {
       setMessage({ text: `후기는 ${MAX_COMMENT_LENGTH}자 이하로 입력해 주세요.`, isError: true });
       return;
     }
-    saveMutation.mutate();
+    if (isPending) return;
+
+    const body = { score, comment: comment.trim() };
+    const options = {
+      onSuccess: (response: { message: string }) => setMessage({ text: response.message, isError: false }),
+      onError: (error: Error) => handleError(error, "평점을 저장하지 못했어요. 다시 시도해 주세요."),
+    };
+    if (myRating) {
+      updateMutation.mutate({ ratingId: myRating.ratingId, body }, options);
+    } else {
+      createMutation.mutate({ movieId, ...body }, options);
+    }
   }
 
   return (
@@ -145,11 +170,21 @@ function RatingEditor({ memberId, movieId, myRating }: RatingEditorProps) {
       <button
         className="mt-2.5 h-[38px] w-full max-w-[520px] cursor-pointer rounded-md border-0 bg-[#171a21] text-[13px] font-bold text-white hover:brightness-95 focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-blue-500/40 disabled:cursor-not-allowed disabled:opacity-60 min-[1025px]:max-w-none"
         type="button"
-        disabled={saveMutation.isPending}
+        disabled={isPending}
         onClick={handleSave}
       >
-        {saveMutation.isPending ? "저장 중..." : myRating ? "평점 수정" : "평점 저장"}
+        {createMutation.isPending || updateMutation.isPending ? "저장 중..." : myRating ? "평점 수정" : "평점 저장"}
       </button>
+      {myRating && (
+        <button
+          className="mt-2 h-[34px] w-full max-w-[520px] cursor-pointer rounded-md border border-[#e5e7eb] bg-white text-xs font-semibold text-red-600 hover:bg-red-50 focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-blue-500/40 disabled:cursor-not-allowed disabled:opacity-60 min-[1025px]:max-w-none"
+          type="button"
+          disabled={isPending}
+          onClick={handleDelete}
+        >
+          {deleteMutation.isPending ? "삭제 중..." : "평점 삭제"}
+        </button>
+      )}
     </>
   );
 }

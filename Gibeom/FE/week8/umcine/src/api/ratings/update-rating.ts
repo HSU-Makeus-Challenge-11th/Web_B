@@ -1,19 +1,20 @@
-import { apiClient } from "../api-client";
+import { authApi } from "../auth-api";
+import type { Rating } from "./get-member-ratings";
 
 export interface UpdateRatingRequest {
   score: number;
   comment: string;
 }
 
-export interface UpdateRatingResponse {
+interface UpdateRatingResponse {
   isSuccess: boolean;
   code: string;
   message: string;
-  result: null;
+  result: Rating;
 }
 
-export function updateRating(memberId: number, ratingId: number, body: UpdateRatingRequest) {
-  return apiClient
-    .patch(`members/${memberId}/ratings/${ratingId}`, { json: body })
+export function updateRating(ratingId: number, body: UpdateRatingRequest) {
+  return authApi
+    .patch(`ratings/${ratingId}`, { json: body })
     .json<UpdateRatingResponse>();
 }

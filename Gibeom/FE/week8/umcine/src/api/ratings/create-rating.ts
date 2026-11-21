@@ -1,4 +1,5 @@
-import { apiClient } from "../api-client";
+import { authApi } from "../auth-api";
+import type { Rating } from "./get-member-ratings";
 
 export interface CreateRatingRequest {
   movieId: number;
@@ -6,15 +7,13 @@ export interface CreateRatingRequest {
   comment: string;
 }
 
-export interface CreateRatingResponse {
+interface CreateRatingResponse {
   isSuccess: boolean;
   code: string;
   message: string;
-  result: number;
+  result: Rating;
 }
 
-export function createRating(memberId: number, body: CreateRatingRequest) {
-  return apiClient
-    .post(`members/${memberId}/ratings`, { json: body })
-    .json<CreateRatingResponse>();
+export function createRating(body: CreateRatingRequest) {
+  return authApi.post("ratings", { json: body }).json<CreateRatingResponse>();
 }

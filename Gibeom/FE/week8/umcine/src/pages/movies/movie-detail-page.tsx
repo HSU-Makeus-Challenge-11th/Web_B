@@ -2,7 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { Link, useParams } from "@tanstack/react-router";
 import { getMovieDetail } from "../../api/movies/get-movie-detail";
 import { MovieRatingForm } from "../../components/movies/movie-rating-form";
-import { useBookmarkStore } from "../../utils/bookmark-storage";
+import { useFavoriteStatusQuery, useToggleFavorite } from "../../hooks/use-favorites";
 import { cn } from "../../utils/cn";
 import { getMovieDetailErrorMessage } from "../../utils/movies/get-movie-detail-error-message";
 import {
@@ -29,10 +29,10 @@ export function MovieDetailPage() {
     staleTime: 30 * 1000,
   });
   const movie = movieDetailQuery.data;
-  const isBookmarked = useBookmarkStore((state) =>
-    movie ? state.bookmarkedMovieIds.includes(movie.id) : false,
-  );
-  const toggleBookmark = useBookmarkStore((state) => state.toggleBookmark);
+  const favoriteStatusQuery = useFavoriteStatusQuery(isValidMovieId ? parsedMovieId : 0);
+  const isBookmarked = favoriteStatusQuery.data ?? false;
+  const { toggleFavorite, pendingMovieId } = useToggleFavorite();
+  const isFavoritePending = pendingMovieId === parsedMovieId;
 
   if (!isValidMovieId) {
     return (
@@ -139,13 +139,14 @@ export function MovieDetailPage() {
           </p>
           <button
             className={cn(
-              "mt-5 inline-flex h-[38px] cursor-pointer items-center gap-[7px] rounded-md border-0 px-3.5 text-[13px] font-bold text-white hover:brightness-95 focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-blue-500/40",
+              "mt-5 inline-flex h-[38px] cursor-pointer items-center gap-[7px] rounded-md border-0 px-3.5 text-[13px] font-bold text-white hover:brightness-95 focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-blue-500/40 disabled:cursor-not-allowed disabled:opacity-60",
               isBookmarked ? "bg-[#174fc6]" : "bg-[#2463eb]",
             )}
             type="button"
             aria-label={`${movie.title} ${isBookmarked ? "북마크 해제" : "북마크 추가"}`}
             aria-pressed={isBookmarked}
-            onClick={() => toggleBookmark(movie.id)}
+            disabled={isFavoritePending || favoriteStatusQuery.isLoading}
+            onClick={() => toggleFavorite(movie.id, isBookmarked)}
           >
             <img
               className="size-[18px] invert"

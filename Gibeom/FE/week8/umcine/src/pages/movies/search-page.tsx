@@ -2,17 +2,15 @@ import { Link, useNavigate, useSearch } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import type { SubmitEvent } from "react";
 import { searchMovies } from "../../api/movies/search-movies";
-import { useBookmarkStore } from "../../utils/bookmark-storage";
+import { useFavoriteMovieIds, useToggleFavorite } from "../../hooks/use-favorites";
 import { cn } from "../../utils/cn";
 import { getTmdbPosterUrl } from "../../utils/movies/tmdb-image";
 
 export function SearchPage() {
   const { query = "" } = useSearch({ from: "/search" });
   const navigate = useNavigate({ from: "/search" });
-  const bookmarkedMovieIds = useBookmarkStore(
-    (state) => state.bookmarkedMovieIds,
-  );
-  const toggleBookmark = useBookmarkStore((state) => state.toggleBookmark);
+  const bookmarkedMovieIds = useFavoriteMovieIds();
+  const { toggleFavorite } = useToggleFavorite();
   const normalizedQuery = query.trim();
   const searchQuery = useQuery({
     queryKey: ["movies", "search", { query: normalizedQuery }],
@@ -163,7 +161,7 @@ export function SearchPage() {
                               type="button"
                               aria-label={`${movie.title} ${isBookmarked ? "북마크 해제" : "북마크 추가"}`}
                               aria-pressed={isBookmarked}
-                              onClick={() => toggleBookmark(movie.id)}
+                              onClick={() => toggleFavorite(movie.id, isBookmarked)}
                             >
                               <img
                                 className={cn(

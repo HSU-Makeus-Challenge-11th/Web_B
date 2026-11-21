@@ -2,7 +2,7 @@ import { Link } from "@tanstack/react-router";
 import { useQueries } from "@tanstack/react-query";
 import { getMovieDetail } from "../../api/movies/get-movie-detail";
 import { MovieGrid } from "../../components/movies/movie-grid";
-import { useBookmarkStore } from "../../utils/bookmark-storage";
+import { useFavoritesQuery, useToggleFavorite } from "../../hooks/use-favorites";
 import { useMeQuery } from "../../hooks/use-me-query";
 import { useProfileStore } from "../../stores/profile-store";
 
@@ -10,8 +10,10 @@ export function ProfilePage() {
   const meQuery = useMeQuery();
   // 프로필 사진은 API가 없어 브라우저에만 저장
   const avatar = useProfileStore((state) => state.profile.avatar);
-  const ids = useBookmarkStore((state) => state.bookmarkedMovieIds);
-  const toggleBookmark = useBookmarkStore((state) => state.toggleBookmark);
+  // GET /favorites는 movieId만 주므로 화면에 필요한 영화 정보는 TMDB 상세 캐시로 채움
+  const favoritesQuery = useFavoritesQuery();
+  const ids = favoritesQuery.data?.map((favorite) => favorite.movieId) ?? [];
+  const { toggleFavorite } = useToggleFavorite();
   const queries = useQueries({ queries: ids.map((id) => ({
     queryKey: ["movies", "detail", id],
     queryFn: () => getMovieDetail(id),
@@ -43,9 +45,9 @@ export function ProfilePage() {
           )}
         </div>
         <h2 className="mt-6 mb-4 text-base font-bold">내 즐겨찾기</h2>
-        {ids.length === 0 ? <p className="py-14 text-center text-sm text-[#8b95a5]">아직 즐겨찾기한 영화가 없어요. 영화 목록에서 북마크를 추가해 보세요.</p> : queries.some((query) => query.isPending) ? <p className="py-14 text-center text-sm text-[#8b95a5]">즐겨찾기를 불러오는 중이에요.</p> : <>
+        {favoritesQuery.isPending ? <p className="py-14 text-center text-sm text-[#8b95a5]">즐겨찾기를 불러오는 중이에요.</p> : favoritesQuery.isError ? <p className="py-14 text-center text-sm text-red-600" role="alert">즐겨찾기를 불러오지 못했어요. <button className="cursor-pointer underline" type="button" onClick={() => void favoritesQuery.refetch()}>다시 시도</button></p> : ids.length === 0 ? <p className="py-14 text-center text-sm text-[#8b95a5]">아직 즐겨찾기한 영화가 없어요. 영화 목록에서 북마크를 추가해 보세요.</p> : queries.some((query) => query.isPending) ? <p className="py-14 text-center text-sm text-[#8b95a5]">즐겨찾기를 불러오는 중이에요.</p> : <>
           {queries.some((query) => query.isError) && <p className="text-sm text-red-600" role="alert">일부 영화를 불러오지 못했어요. <button className="cursor-pointer underline" type="button" onClick={() => queries.filter((query) => query.isError).forEach((query) => { void query.refetch(); })}>다시 시도</button></p>}
-          <MovieGrid movies={movies} bookmarkedMovieIds={ids} onToggleBookmark={toggleBookmark} />
+          <MovieGrid movies={movies} bookmarkedMovieIds={ids} onToggleBookmark={(movieId) => toggleFavorite(movieId, true)} />
         </>}
       </section>
     </main>

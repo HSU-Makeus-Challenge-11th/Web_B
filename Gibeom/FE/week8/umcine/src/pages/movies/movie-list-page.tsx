@@ -4,14 +4,12 @@ import { useQuery } from "@tanstack/react-query";
 import { getMovies } from "../../api/movies/get-movies";
 import { MovieGrid } from "../../components/movies/movie-grid";
 import { Pagination } from "../../components/movies/pagination";
-import { useBookmarkStore } from "../../utils/bookmark-storage";
+import { useFavoriteMovieIds, useToggleFavorite } from "../../hooks/use-favorites";
 
 export function MovieListPage() {
   const [page, setPage] = useState(1);
-  const bookmarkedMovieIds = useBookmarkStore(
-    (state) => state.bookmarkedMovieIds,
-  );
-  const toggleBookmark = useBookmarkStore((state) => state.toggleBookmark);
+  const bookmarkedMovieIds = useFavoriteMovieIds();
+  const { toggleFavorite } = useToggleFavorite();
   const moviesQuery = useQuery({
     queryKey: ["movies", "list", { page }],
     queryFn: () => getMovies({ page }),
@@ -49,7 +47,7 @@ export function MovieListPage() {
             <MovieGrid
               movies={movies}
               bookmarkedMovieIds={bookmarkedMovieIds}
-              onToggleBookmark={toggleBookmark}
+              onToggleBookmark={(movieId) => toggleFavorite(movieId, bookmarkedMovieIds.includes(movieId))}
             />
             <Pagination
               currentPage={page}
