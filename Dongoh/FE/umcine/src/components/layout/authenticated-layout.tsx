@@ -1,12 +1,23 @@
-import { Navigate, Outlet } from "@tanstack/react-router";
+"use client";
+
+import { useRouter } from "next/navigation";
+import { useEffect, type ReactNode } from "react";
 import { useMeQuery } from "../../hooks/use-me-query";
 import { useAuthStore } from "../../stores/auth-store";
 
-export function AuthenticatedLayout() {
+export function AuthenticatedLayout({ children }: { children: ReactNode }) {
+  const router = useRouter();
   const accessToken = useAuthStore((state) => state.accessToken);
+  const hasHydrated = useAuthStore((state) => state.hasHydrated);
   const meQuery = useMeQuery();
 
-  if (!accessToken) return <Navigate to="/login" />;
+  useEffect(() => {
+    if (hasHydrated && !accessToken) router.replace("/login");
+  }, [accessToken, hasHydrated, router]);
+
+  if (!hasHydrated || !accessToken) {
+    return <main role="status" className="p-10 text-center">로그인 상태를 확인하는 중이에요.</main>;
+  }
   if (meQuery.isPending) {
     return <main role="status" className="p-10 text-center">내 정보를 불러오는 중이에요.</main>;
   }
@@ -19,5 +30,5 @@ export function AuthenticatedLayout() {
     );
   }
 
-  return <Outlet />;
+  return children;
 }

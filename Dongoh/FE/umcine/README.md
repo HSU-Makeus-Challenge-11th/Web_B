@@ -1,7 +1,7 @@
 # UMCine
 
-React와 TypeScript로 만드는 영화 목록·상세·검색 및 회원가입 앱입니다.
-라우팅은 TanStack Router, 서버 상태는 TanStack Query, 북마크 상태는 Zustand로 관리합니다.
+Next.js App Router와 TypeScript로 만드는 영화 목록·상세·검색 및 회원가입 앱입니다.
+라우팅은 Next.js, 서버 상태는 TanStack Query, 북마크 상태는 Zustand로 관리합니다.
 
 ## 실행
 
@@ -16,9 +16,9 @@ pnpm dev
 
 필수 환경변수:
 
-- `VITE_TMDB_API_BASE_URL`: TMDB API 기본 주소
-- `VITE_TMDB_ACCESS_TOKEN`: 본인의 TMDB API 읽기 액세스 토큰
-- `VITE_API_BASE_URL`: 회원 서버 주소. 워크북 기준 `http://localhost:8080`
+- `NEXT_PUBLIC_TMDB_API_BASE_URL`: TMDB API 기본 주소
+- `NEXT_PUBLIC_TMDB_ACCESS_TOKEN`: 본인의 TMDB API 읽기 액세스 토큰
+- `NEXT_PUBLIC_API_BASE_URL`: 회원 서버 주소. 워크북 기준 `http://localhost:8080`
 
 실제 값은 Git에서 제외된 `.env.local`에 보관합니다.
 
@@ -41,4 +41,4 @@ pnpm lint
 - `/profile`: 내 정보 미리보기
 - `/profile-edit`: 내 정보 수정·저장·취소
 
-프로필은 앱 메모리에 보관하며 페이지 이동 시 유지되고 새로고침하면 초기화됩니다. 실제 로그인과 내 정보 서버 연동은 8주차에서 진행합니다.
+인증 정보는 브라우저 저장소에서 복원되며, 내 정보는 회원 서버와 연동됩니다.

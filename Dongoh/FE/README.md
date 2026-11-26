@@ -11,7 +11,7 @@ FE/
 │   ├── pnpm-lock.yaml
 │   └── .env.example
 ├── weeks/
-│   ├── week0.md ~ week7.md # 주차별 기록과 필수 미션 판정
+│   ├── week0.md ~ week9.md # 주차별 기록과 필수 미션 판정
 │   ├── TEMPLATE.md         # 다음 주차 기록 양식
 │   └── migration.md        # 이번 구조 정리 내역
 └── .local-backups/          # Git 제외: 통합 전 원본 백업
@@ -81,6 +81,7 @@ git commit -m "Refactor: 프론트엔드 앱 통합 및 주차별 기록 분리"
 - [0주차](weeks/week0.md) · [1주차](weeks/week1.md) · [2주차](weeks/week2.md) · [3주차](weeks/week3.md)
 - [4주차](weeks/week4.md) · [5주차](weeks/week5.md) · [6주차](weeks/week6.md)
 - [7주차 — 회원가입과 로그인·내 정보 화면](weeks/week7.md)
+- [9주차 — TanStack Router에서 Next.js로 마이그레이션](weeks/week9.md)
 - 과거 전체 코드는 Git의 커밋·PR 이력에서 확인합니다. 커밋 전이었던 원본도 로컬 백업에 보존했습니다.
 - [구조 정리와 백업 복원 방법](weeks/migration.md)
 

@@ -1,5 +1,7 @@
+"use client";
+
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { Link } from "@tanstack/react-router";
+import Link from "next/link";
 import { useState } from "react";
 import {
   createRating,
@@ -29,7 +31,7 @@ export function MovieRating({ movieId }: { movieId: number }) {
       <aside className="border-l border-gray-200 pl-7 max-[1000px]:col-span-full max-[1000px]:border-t max-[1000px]:border-l-0 max-[1000px]:pt-[22px] max-[1000px]:pl-0">
         <h2 className="mb-2 text-lg font-black text-gray-900">내 평점</h2>
         <p className="text-sm text-gray-500">
-          <Link to="/login" className="font-bold text-indigo-600 underline">로그인</Link>하고 평점을 남겨보세요.
+          <Link href="/login" className="font-bold text-indigo-600 underline">로그인</Link>하고 평점을 남겨보세요.
         </p>
       </aside>
     );
