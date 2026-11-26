@@ -30,6 +30,11 @@ public class RatingController {
 
     // 5주차에 만든 유저별 평점 조회입니다. 공개 API라 토큰을 받지 않습니다.
     @Operation(summary = "유저별 평점 조회", description = "특정 회원이 작성한 평점 목록을 조회합니다. 토큰이 필요하지 않습니다.")
+    @ApiResponses({
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "조회 성공"),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "404", description = "회원을 찾을 수 없음",
+                    content = @Content(examples = @ExampleObject(value = "{\"isSuccess\":false,\"code\":\"MEMBER404_1\",\"message\":\"해당 회원을 찾을 수 없습니다.\",\"result\":null}")))
+    })
     @GetMapping("/members/{memberId}/ratings")
     public List<RatingResponse> getMemberRatings(@PathVariable Long memberId) {
         return ratingService.getRatingsByMember(memberId);
