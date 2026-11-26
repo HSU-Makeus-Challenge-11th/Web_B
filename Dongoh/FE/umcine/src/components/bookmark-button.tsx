@@ -1,5 +1,7 @@
+"use client";
+
 import { useIsMutating } from "@tanstack/react-query";
-import { useNavigate } from "@tanstack/react-router";
+import { useRouter } from "next/navigation";
 import { getRequestError } from "../api/response";
 import { useFavorite, useFavoriteMutation } from "../hooks/use-favorites";
 import { useAuthStore } from "../stores/auth-store";
@@ -23,7 +25,7 @@ export function BookmarkButton({
   const favoriteMutation = useFavoriteMutation(movieId);
   const isMutating =
     useIsMutating({ mutationKey: ["favorite-toggle", movieId] }) > 0;
-  const navigate = useNavigate();
+  const router = useRouter();
   const isFavorite = Boolean(accessToken && favoriteQuery.data?.isFavorite);
 
   return (
@@ -40,7 +42,7 @@ export function BookmarkButton({
       )}
       onClick={() => {
         if (!accessToken) {
-          void navigate({ to: "/login" });
+          router.push("/login");
           return;
         }
         if (favoriteQuery.isError) {

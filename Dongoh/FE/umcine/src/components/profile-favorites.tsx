@@ -1,5 +1,7 @@
+"use client";
+
 import { useQuery } from "@tanstack/react-query";
-import { Link } from "@tanstack/react-router";
+import Link from "next/link";
 import { getMovieDetail } from "../api/movies/get-movie-detail";
 import { getRequestError } from "../api/response";
 import { useFavorites } from "../hooks/use-favorites";
@@ -55,8 +57,7 @@ function FavoriteMovie({ movieId }: { movieId: number }) {
     <div className="flex items-center gap-3">
       <Link
         className="flex min-w-0 flex-1 items-center gap-3 font-bold"
-        to="/movies/$movieId"
-        params={{ movieId: String(movieId) }}
+        href={`/movies/${movieId}`}
       >
         {posterUrl ? (
           <img src={posterUrl} alt="" className="h-20 w-14 rounded object-cover" />

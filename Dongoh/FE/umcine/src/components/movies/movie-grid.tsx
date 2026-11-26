@@ -1,3 +1,5 @@
+"use client";
+
 import type { TmdbMovieListItem } from "../../api/movies/models";
 import { useBookmarkStore } from "../../stores/bookmark-store";
 import MovieCard from "./movie-card";
