@@ -2,6 +2,14 @@
 
 Java 21 / Spring Boot 3.5.0 / Spring Data JPA를 사용한다.
 
+## 9주차 필수 미션
+
+- Swagger/OpenAPI 문서와 JWT Bearer 인증 표시
+- 회원·인증·평점·즐겨찾기 API 설명과 요청 예시
+- 즐겨찾기와 평점 Service 단위 테스트
+- 즐겨찾기와 평점 API 통합 테스트
+- [Swagger·테스트 미션 기록과 결과 화면](docs/9주차-미션-기록.md)
+
 ## 6주차 필수 미션
 
 - 회원가입 입력 검증, bcrypt 저장, 비밀번호 응답 제외
@@ -37,4 +45,10 @@ H2 실습 서버 주소는 `http://localhost:18080`이며, 서버를 종료하�
 .\gradlew.bat test --no-daemon
 ```
 
-기본 기동 테스트 1건과 API 통합 테스트 36건이 포함되어 있다. 테스트는 H2를 사용하며 실제 MySQL 검증과 구분한다.
+9주차에 추가한 테스트만 실행하려면 다음 명령을 사용한다.
+
+```powershell
+.\gradlew.bat test --no-daemon --tests '*FavoriteServiceTest' --tests '*FavoriteApiTest' --tests '*RatingServiceTest' --tests '*RatingApiTest'
+```
+
+테스트는 H2를 사용하며 실제 MySQL 검증과 구분한다. 전체 테스트에는 현재 API 규격보다 오래된 6주차 URL을 호출하는 `WritingApiIntegrationTests`가 남아 있으므로 별도 정리가 필요하다.
