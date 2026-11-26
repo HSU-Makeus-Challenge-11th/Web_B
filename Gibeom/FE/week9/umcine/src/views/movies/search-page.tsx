@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
@@ -51,7 +52,7 @@ export function SearchPage() {
             영화 검색어
           </label>
           <span className="grid w-[46px] shrink-0 place-items-center" aria-hidden="true">
-            <img className="size-[18px] opacity-55" src="/icons/search.svg" alt="" />
+            <Image className="size-[18px] opacity-55" src="/icons/search.svg" alt="" width={18} height={18} />
           </span>
           <input
             className="min-w-0 flex-1 border-0 bg-transparent pr-3.5 text-[#171a21] outline-0 placeholder:text-[#a3a9b3]"
@@ -111,15 +112,17 @@ export function SearchPage() {
                     <li className="border-b border-[#e5e7eb] py-5" key={movie.id}>
                       <article className="grid grid-cols-[90px_minmax(0,1fr)] gap-3.5 min-[481px]:grid-cols-[105px_minmax(0,1fr)] min-[481px]:gap-[18px]">
                         <Link
-                          className="block aspect-2/3 overflow-hidden rounded-[7px] bg-[#e4e7eb] focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-blue-500/40"
+                          className="relative block aspect-2/3 overflow-hidden rounded-[7px] bg-[#e4e7eb] focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-blue-500/40"
                           href={`/movies/${movie.id}`}
                           aria-label={`${movie.title} 상세 보기`}
                         >
                           {posterUrl ? (
-                            <img
-                              className="block h-full w-full object-cover"
+                            <Image
+                              className="object-cover"
                               src={posterUrl}
                               alt={`${movie.title} 포스터`}
+                              fill
+                              sizes="(min-width: 481px) 105px, 90px"
                             />
                           ) : (
                             <span className="grid h-full place-items-center text-xs text-[#8b95a5]">
@@ -162,7 +165,7 @@ export function SearchPage() {
                               aria-pressed={isBookmarked}
                               onClick={() => toggleFavorite(movie.id, isBookmarked)}
                             >
-                              <img
+                              <Image
                                 className={cn(
                                   "size-4",
                                   isBookmarked && "invert",
@@ -172,8 +175,7 @@ export function SearchPage() {
                                     ? "/icons/bookmark.svg"
                                     : "/icons/bookmark-outline.svg"
                                 }
-                                alt=""
-                              />
+                                alt="" width={16} height={16} />
                               {isBookmarked ? "북마크 해제" : "북마크 추가"}
                             </button>
                           </div>

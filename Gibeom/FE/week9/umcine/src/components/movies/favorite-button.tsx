@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useFavoriteStatusQuery, useToggleFavorite } from "../../hooks/use-favorites";
 import { cn } from "../../utils/cn";
 
@@ -27,12 +28,10 @@ export function FavoriteButton({ movieId, title }: FavoriteButtonProps) {
       disabled={isFavoritePending || favoriteStatusQuery.isLoading}
       onClick={() => toggleFavorite(movieId, isBookmarked)}
     >
-      {/* eslint-disable-next-line @next/next/no-img-element -- 18px 고정 크기 아이콘 SVG */}
-      <img
+      <Image
         className="size-[18px] invert"
         src={isBookmarked ? "/icons/bookmark.svg" : "/icons/bookmark-outline.svg"}
-        alt=""
-      />
+        alt="" width={18} height={18} />
       {isBookmarked ? "북마크 해제" : "즐겨찾기"}
     </button>
   );

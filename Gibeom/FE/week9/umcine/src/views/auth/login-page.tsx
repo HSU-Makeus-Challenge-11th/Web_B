@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useEffect, useState, type SubmitEvent } from "react";
 import Link from "next/link";
@@ -39,14 +40,14 @@ export function LoginPage() {
           <div>
             <label className="mb-2 block text-sm font-semibold" htmlFor="login-email">이메일</label>
             <div className="flex h-11 items-center gap-2 rounded-md border border-[#e5e7eb] bg-white px-3 focus-within:border-blue-500">
-              <img className="size-4 opacity-50" src="/icons/mail.svg" alt="" />
+              <Image className="size-4 opacity-50" src="/icons/mail.svg" alt="" width={16} height={16} />
               <input className="min-w-0 flex-1 border-0 bg-transparent text-sm outline-none" id="login-email" type="email" autoComplete="email" placeholder="movie@example.com" value={form.email} onChange={(event) => setForm((prev) => ({ ...prev, email: event.target.value }))} required />
             </div>
           </div>
           <div>
             <label className="mb-2 block text-sm font-semibold" htmlFor="login-password">비밀번호</label>
             <div className="flex h-11 items-center gap-2 rounded-md border border-[#e5e7eb] bg-white px-3 focus-within:border-blue-500">
-              <img className="size-4 opacity-50" src="/icons/lock.svg" alt="" />
+              <Image className="size-4 opacity-50" src="/icons/lock.svg" alt="" width={16} height={16} />
               <input className="min-w-0 flex-1 border-0 bg-transparent text-sm outline-none" id="login-password" type="password" autoComplete="current-password" placeholder="비밀번호" value={form.password} onChange={(event) => setForm((prev) => ({ ...prev, password: event.target.value }))} required />
             </div>
           </div>

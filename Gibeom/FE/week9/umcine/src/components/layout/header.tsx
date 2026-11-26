@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useMeQuery } from "../../hooks/use-me-query";
@@ -40,7 +41,7 @@ export function Header() {
             className="grid size-[27px] place-items-center rounded-lg border-2 border-[#171a21] min-[481px]:size-[30px]"
             aria-hidden="true"
           >
-            <img className="size-[21px]" src="/icons/movie.svg" alt="" />
+            <Image className="size-[21px]" src="/icons/movie.svg" alt="" width={21} height={21} />
           </span>
           <span>UMCine</span>
         </Link>
@@ -90,7 +91,7 @@ export function Header() {
             href="/search"
             aria-label="영화 검색"
           >
-            <img className="size-[22px] opacity-70" src="/icons/search.svg" alt="" />
+            <Image className="size-[22px] opacity-70" src="/icons/search.svg" alt="" width={22} height={22} />
           </Link>
           {!isAuthHydrated ? (
             // 토큰 복원 전: 서버 HTML과 같은 자리 표시

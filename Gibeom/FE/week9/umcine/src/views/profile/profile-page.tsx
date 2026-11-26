@@ -33,6 +33,7 @@ export function ProfilePage() {
         <h2 className="mb-4 text-base font-bold">기본 정보</h2>
         <div className="flex flex-wrap items-center gap-6 border-b border-[#e5e7eb] pb-6">
           <div className="grid size-[72px] shrink-0 place-items-center overflow-hidden rounded-full bg-[#e4e7eb]">
+            {/* eslint-disable-next-line @next/next/no-img-element -- 브라우저에서 읽은 data URL이라 이미지 최적화 서버를 거칠 수 없음 */}
             <img className={avatar ? "size-full object-cover" : "size-8"} src={avatar || "/icons/person.svg"} alt="프로필 사진" />
           </div>
           {meQuery.isPending ? (

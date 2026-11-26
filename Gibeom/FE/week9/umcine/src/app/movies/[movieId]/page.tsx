@@ -12,10 +12,10 @@ interface MovieDetailPageProps {
 export async function generateMetadata({ params }: MovieDetailPageProps): Promise<Metadata> {
   const { movieId } = await params;
   const movie = await getMovie(movieId);
-  if (!movie) return { title: "영화를 찾을 수 없어요 | UMCine" };
+  if (!movie) return { title: "영화를 찾을 수 없어요" };
 
   return {
-    title: `${movie.title} | UMCine`,
+    title: movie.title,
     description: movie.overview || `${movie.title} 영화 정보`,
     openGraph: {
       title: movie.title,

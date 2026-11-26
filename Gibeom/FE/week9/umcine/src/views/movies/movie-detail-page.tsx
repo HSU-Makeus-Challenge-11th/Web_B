@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import type { TmdbMovieDetail } from "../../api/movies/models";
 import { FavoriteButton } from "../../components/movies/favorite-button";
@@ -24,11 +25,22 @@ export function MovieDetail({ movie }: { movie: TmdbMovieDetail }) {
   return (
     <main className="flex-1 bg-[#f6f7f9]">
       <section
-        className="relative min-h-[260px] bg-[#555d6c] bg-cover text-white [background-position:center_32%] min-[481px]:min-h-[300px]"
+        className="relative min-h-[260px] bg-[#555d6c] text-white min-[481px]:min-h-[300px]"
         aria-labelledby="movie-detail-title"
-        style={backdropUrl ? { backgroundImage: `url(${backdropUrl})` } : undefined}
       >
-        {!backdropUrl && (
+        {backdropUrl ? (
+          // 첫 화면에서 가장 큰 이미지(LCP)라 지연 로딩하지 않고 먼저 요청함
+          // (Next.js 16부터 priority 대신 loading="eager"·fetchPriority 사용)
+          <Image
+            className="object-cover object-[center_32%]"
+            src={backdropUrl}
+            alt=""
+            fill
+            sizes="100vw"
+            loading="eager"
+            fetchPriority="high"
+          />
+        ) : (
           <span className="absolute inset-0 z-1 grid place-items-center text-sm text-white/70">
             이미지 없음
           </span>
@@ -71,10 +83,14 @@ export function MovieDetail({ movie }: { movie: TmdbMovieDetail }) {
         aria-label="영화 상세 정보"
       >
         {posterUrl ? (
-          <img
-            className="block aspect-2/3 w-[min(180px,55vw)] rounded-lg object-cover shadow-[0_8px_22px_rgba(15,23,42,0.16)] min-[481px]:w-full"
+          <Image
+            className="block aspect-2/3 h-auto w-[min(180px,55vw)] rounded-lg object-cover shadow-[0_8px_22px_rgba(15,23,42,0.16)] min-[481px]:w-full"
             src={posterUrl}
             alt={`${movie.title} 포스터`}
+            width={500}
+            height={750}
+            sizes="(min-width: 1025px) 165px, (min-width: 721px) 150px, (min-width: 481px) 110px, 180px"
+            loading="eager"
           />
         ) : (
           <div className="grid aspect-2/3 w-[min(180px,55vw)] place-items-center rounded-lg bg-[#e4e7eb] text-xs text-[#8b95a5] shadow-[0_8px_22px_rgba(15,23,42,0.16)] min-[481px]:w-full">

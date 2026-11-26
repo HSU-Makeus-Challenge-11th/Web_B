@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import type { TmdbMovieListItem } from "../../api/movies/models";
 import { cn } from "../../utils/cn";
@@ -29,10 +30,13 @@ export function MovieCard({
             aria-label={`${movie.title} 상세 보기`}
           >
             {posterUrl ? (
-              <img
-                className="block h-full w-full object-cover object-[center_20%]"
+              <Image
+                className="object-cover object-[center_20%]"
                 src={posterUrl}
                 alt={`${movie.title} 포스터`}
+                fill
+                // 그리드 열 수에 맞춰 화면에서 차지하는 너비를 알려 주면 그 크기의 파일만 받음
+                sizes="(min-width: 1025px) 220px, (min-width: 721px) 33vw, (min-width: 481px) 50vw, 100vw"
               />
             ) : (
               <span className="grid h-full place-items-center text-xs text-[#8b95a5]">
@@ -53,15 +57,14 @@ export function MovieCard({
             aria-pressed={isBookmarked}
             onClick={() => onToggleBookmark(movie.id)}
           >
-            <img
+            <Image
               className="h-[23px] w-[23px] invert"
               src={
                 isBookmarked
                   ? "/icons/bookmark.svg"
                   : "/icons/bookmark-outline.svg"
               }
-              alt=""
-            />
+              alt="" width={23} height={23} />
           </button>
         </div>
 

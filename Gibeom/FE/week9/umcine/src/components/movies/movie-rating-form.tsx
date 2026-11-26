@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useState } from "react";
 import Link from "next/link";
 import { getApiErrorMessage } from "../../api/api-error";
@@ -145,7 +146,7 @@ function RatingEditor({ memberId, movieId, myRating }: RatingEditorProps) {
               setMessage(null);
             }}
           >
-            <img className="size-[18px]" src={star <= score ? "/icons/star.svg" : "/icons/star-outline.svg"} alt="" />
+            <Image className="size-[18px]" src={star <= score ? "/icons/star.svg" : "/icons/star-outline.svg"} alt="" width={18} height={18} />
           </button>
         ))}
       </div>

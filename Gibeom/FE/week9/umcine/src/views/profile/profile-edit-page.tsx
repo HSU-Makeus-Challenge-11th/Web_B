@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useState, type ChangeEvent, type SubmitEvent } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -77,8 +78,9 @@ function ProfileEditForm({ member }: { member: MemberInfo }) {
         <div className="mt-10 grid gap-10 min-[721px]:grid-cols-[1fr_2fr] min-[721px]:gap-20">
           <div className="flex flex-col items-center">
             <label className="relative cursor-pointer" htmlFor="profile-photo">
-              <span className="grid size-[88px] place-items-center overflow-hidden rounded-full bg-[#e4e7eb]"><img className={form.avatar ? "size-full object-cover" : "size-10"} src={form.avatar || "/icons/person.svg"} alt="프로필 사진 미리보기" /></span>
-              <span className="absolute right-0 bottom-0 grid size-6 place-items-center rounded-full border border-[#555d6c] bg-white"><img className="size-3" src="/icons/edit.svg" alt="사진 변경" /></span>
+              <span className="grid size-[88px] place-items-center overflow-hidden rounded-full bg-[#e4e7eb]">{/* eslint-disable-next-line @next/next/no-img-element -- 브라우저에서 읽은 data URL이라 이미지 최적화 서버를 거칠 수 없음 */}
+              <img className={form.avatar ? "size-full object-cover" : "size-10"} src={form.avatar || "/icons/person.svg"} alt="프로필 사진 미리보기" /></span>
+              <span className="absolute right-0 bottom-0 grid size-6 place-items-center rounded-full border border-[#555d6c] bg-white"><Image className="size-3" src="/icons/edit.svg" alt="사진 변경" width={12} height={12} /></span>
             </label>
             <input className="mt-3 w-full max-w-[230px] text-xs text-[#727b8b] file:mr-2 file:rounded file:border file:border-[#d9dee7] file:bg-white file:px-2 file:py-1" id="profile-photo" type="file" accept="image/*" onChange={handlePhoto} />
             <p className="mt-2 text-[11px] text-[#8b95a5]">프로필 이미지 · 최대 5MB</p>
