@@ -1,13 +1,7 @@
-"use client";
-
-import { useQuery } from "@tanstack/react-query";
 import Link from "next/link";
-import { useParams } from "next/navigation";
-import { getMovieDetail } from "../../api/movies/get-movie-detail";
+import type { TmdbMovieDetail } from "../../api/movies/models";
+import { FavoriteButton } from "../../components/movies/favorite-button";
 import { MovieRatingForm } from "../../components/movies/movie-rating-form";
-import { useFavoriteStatusQuery, useToggleFavorite } from "../../hooks/use-favorites";
-import { cn } from "../../utils/cn";
-import { getMovieDetailErrorMessage } from "../../utils/movies/get-movie-detail-error-message";
 import {
   getTmdbBackdropUrl,
   getTmdbPosterUrl,
@@ -21,54 +15,9 @@ function getRuntimeText(runtime: number | null) {
   return `${hours}시간 ${minutes}분`;
 }
 
-export function MovieDetailPage() {
-  const { movieId } = useParams<{ movieId: string }>();
-  const parsedMovieId = Number(movieId);
-  const isValidMovieId = Number.isInteger(parsedMovieId) && parsedMovieId > 0;
-  const movieDetailQuery = useQuery({
-    queryKey: ["movies", "detail", parsedMovieId],
-    queryFn: () => getMovieDetail(parsedMovieId),
-    enabled: isValidMovieId,
-    staleTime: 30 * 1000,
-  });
-  const movie = movieDetailQuery.data;
-  const favoriteStatusQuery = useFavoriteStatusQuery(isValidMovieId ? parsedMovieId : 0);
-  const isBookmarked = favoriteStatusQuery.data ?? false;
-  const { toggleFavorite, pendingMovieId } = useToggleFavorite();
-  const isFavoritePending = pendingMovieId === parsedMovieId;
-
-  if (!isValidMovieId) {
-    return (
-      <main className="grid min-h-[420px] flex-1 place-items-center bg-[#f6f7f9] text-lg font-bold text-[#555d6c]">
-        올바르지 않은 영화 번호예요.
-      </main>
-    );
-  }
-
-  if (movieDetailQuery.isPending) {
-    return (
-      <main className="grid min-h-[420px] flex-1 place-items-center bg-[#f6f7f9] text-lg font-bold text-[#555d6c]">
-        영화 정보를 불러오는 중이에요.
-      </main>
-    );
-  }
-
-  if (movieDetailQuery.isError) {
-    return (
-      <main className="grid min-h-[420px] flex-1 place-items-center bg-[#f6f7f9] text-lg font-bold text-[#555d6c]">
-        {getMovieDetailErrorMessage(movieDetailQuery.error)}
-      </main>
-    );
-  }
-
-  if (!movie) {
-    return (
-      <main className="grid min-h-[420px] flex-1 place-items-center bg-[#f6f7f9] text-lg font-bold text-[#555d6c]">
-        영화를 찾을 수 없어요.
-      </main>
-    );
-  }
-
+// 서버에서 조회한 영화 정보를 그리는 Server Component
+// 즐겨찾기 버튼과 평점 폼처럼 토큰·클릭이 필요한 부분만 Client Component로 넣음
+export function MovieDetail({ movie }: { movie: TmdbMovieDetail }) {
   const backdropUrl = getTmdbBackdropUrl(movie.backdrop_path);
   const posterUrl = getTmdbPosterUrl(movie.poster_path);
 
@@ -140,28 +89,7 @@ export function MovieDetailPage() {
           <p className="m-0 text-sm leading-[1.75] text-[#656e7c]">
             {movie.overview}
           </p>
-          <button
-            className={cn(
-              "mt-5 inline-flex h-[38px] cursor-pointer items-center gap-[7px] rounded-md border-0 px-3.5 text-[13px] font-bold text-white hover:brightness-95 focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-blue-500/40 disabled:cursor-not-allowed disabled:opacity-60",
-              isBookmarked ? "bg-[#174fc6]" : "bg-[#2463eb]",
-            )}
-            type="button"
-            aria-label={`${movie.title} ${isBookmarked ? "북마크 해제" : "북마크 추가"}`}
-            aria-pressed={isBookmarked}
-            disabled={isFavoritePending || favoriteStatusQuery.isLoading}
-            onClick={() => toggleFavorite(movie.id, isBookmarked)}
-          >
-            <img
-              className="size-[18px] invert"
-              src={
-                isBookmarked
-                  ? "/icons/bookmark.svg"
-                  : "/icons/bookmark-outline.svg"
-              }
-              alt=""
-            />
-            {isBookmarked ? "북마크 해제" : "즐겨찾기"}
-          </button>
+          <FavoriteButton movieId={movie.id} title={movie.title} />
         </div>
 
         <MovieRatingForm movieId={movie.id} />
